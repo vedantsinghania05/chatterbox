@@ -1,46 +1,98 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
-import { Col, Container, Row, Card, CardBody, Button, Alert } from 'reactstrap';
-import { getAllUsers, deleteUser } from '../nodeserverapi'
+import { Col, Container, Row, Card, CardBody, Button, Alert, Form, FormGroup } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { createGroup, getAllGroups, getGroup, addMember } from '../nodeserverapi'
 
 class Home extends Component {
   constructor() {
     super();
-    this.state = { result: undefined, userList: [] };
+    this.state = { groupTitle: '', groupList: [], showGroup: false, selectedGroup: undefined, newMemberUsername: '', groupTableIndex: undefined };
   }
 
-  componentDidMount = () => {
-    getAllUsers(getUserToken(),
+  componentDidMount= () => {
+    console.log('hi')
+    getAllGroups(getUserToken(),
       response => {
-        this.setState({ userList: response.data });
-      },
-      error => {
-        this.setState({ result: error.message });
-      }
-    )
-  }
+        console.log('>>>>>>> success!: ', response.data)
 
-  onDelete = (index, id) => {
-    const { userList } = this.state
-  
-    deleteUser(id, getUserToken(),
-      response => {
-        if (id===this.props.userInfo.id) {
-          this.props.clearUser();
-        } else {
-          userList.splice(index, 1);
-          this.setState({ userList: userList });
+        let usersGroups = []
+        for (let group of response.data) {
+          for (let user of group.members) {
+            if (user === this.props.userInfo.id) {
+              usersGroups.push(group)
+            }
+          }
         }
+
+        console.log('>>>>>>>>>> !!!', usersGroups)
+        this.setState({ groupList: usersGroups }) 
       },
       error => {
-        this.setState({ result: error.message });
+        console.log('error found: ', error.message)
       }
     )
   }
+
+  onChangeGroupTitle = (e) => {
+    console.log('>>>>', e.target.value)
+    this.setState({ groupTitle: e.target.value })
+  }
+
+  onChangeNewMemberUsername = (e) => {
+    this.setState({ newMemberUsername: e.target.value })
+  }
+
+  createGroup = () => {
+    const { groupTitle, groupList } = this.state;
+    console.log('>>>> creating group')
+
+    groupList.push({ title: groupTitle, members: [] })
+
+    createGroup(groupTitle, this.props.userInfo.id,
+        response => {
+            console.log('group created: ', response.data)
+            this.setState({ groupTitle: '' })
+        },
+        error => {
+            console.log('error found: ', error.message)
+        }
+    )
+
+    console.log(groupList)
+  }
+
+  goToGroup = (groupId) => {
+    console.log('GROUPID: ', groupId)
+    getGroup(groupId, getUserToken(),
+      response => {
+        console.log('success!: ', response.data)
+        this.setState({ selectedGroup: response.data, showGroup: true })
+      },
+      error => {
+        console.log('error found: ', error.message)
+      }
+    )
+  }
+
+  openAdder = (group, index) => {
+    const {  } = this.state
+
+    console.log('adding member')
+    console.log('>>>>> ', group)  
+
+    this.setState({ groupTableIndex: index })  
+  }
+
+  addMember = () => {
+    const { newMemberUsername } = this.state;
+    console.log('here: ', newMemberUsername)
+  }
+
 
   render() {
-    const { result, userList } = this.state
+    const { groupTitle, groupList, showGroup, selectedGroup, newMemberUsername, groupTableIndex } = this.state
 
     return (
       <Container className="dashboard">
@@ -54,21 +106,55 @@ class Home extends Component {
             <Card>
               <CardBody>
 
-                <div className="card__title">
-                  <h5 className="bold-text">Users</h5>
-                  <h5 className="subhead">Manage Users</h5>
-                </div>
+                <Form>
+                  <FormGroup>
+                    <input
+                      name="groupTitle"
+                      type="string"
+                      placeholder="Title"
+                      value={groupTitle}
+                      onChange={this.onChangeGroupTitle}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Button onClick={this.createGroup}>Create</Button>
+                  </FormGroup>
+                </Form>
 
-                {result && <Alert color="danger">{result}</Alert>}
-                
                 <table>
+                  <thead>
+                    <tr>
+                      <th><p>group</p></th>
+                    </tr>
+                  </thead>
                   <tbody>
-                    {userList.map((u, i) => <tr key={i}>
-                      <td>{u.email}</td>
-                      <td><Button onClick={()=>this.onDelete(i, u.id)}>x</Button></td>
+                    {groupList.map((group, index) => <tr key={index}>
+                      <td><Button onClick={()=>this.goToGroup(group.id)}>{group.title}</Button></td>
+                      <td><Button onClick={()=>this.openAdder(group, index)}>+</Button></td>
+                      {index === groupTableIndex && <td>
+                        <input
+                          name="newMemberUsername"
+                          type="string"
+                          placeholder="enter username"
+                          value={newMemberUsername}
+                          onChange={this.onChangeNewMemberUsername}/>
+                      </td>}
+                      {index === groupTableIndex && <td>
+                        <Button onClick={this.addMember}>Add</Button>
+                      </td>}
                     </tr>)}
                   </tbody>
                 </table>
+
+                {showGroup && <span>
+                  
+                  <Form>
+                    <FormGroup>
+                      <p>test</p>
+                    </FormGroup>
+                  </Form>
+
+                </span>}
 
               </CardBody>
             </Card>

@@ -6,8 +6,10 @@ import Layout from './layout/index';
 import MainWrapper from './MainWrapper';
 import SignUp from '../SignUp';
 import SignIn from '../SignIn';
+import Users from '../Users'
 import Home from '../Home';
 import SignOut from '../SignOut';
+import Groups from '../Groups';
 
 const PrivateRoute = ({ component: Component, authenticated, ...rest }) => (
   <Route {...rest} render={props => (
@@ -29,6 +31,8 @@ const wrappedRoutes = () => (
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/signout" component={SignOut} />
+        <Route exact path="/users" component={Users} />
+        <Route exact path="/groups" component={Groups} />
       </Switch>
     </div>
   </div>

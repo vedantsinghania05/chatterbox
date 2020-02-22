@@ -34,9 +34,30 @@ export const createUser = (username, password, successCbk, errorCbk) => {
   .catch(errorCbk);
 }
 
+export const createGroup = (title, members, successCbk, errorCbk) => {
+  console.log('>>>> nodeserverapi.js is working')
+  axiosInstance.post(nodeserverUrl + '/groups',
+    {
+      access_token: masterKey,
+      title: title,
+      members: members
+    },
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}
+
 export const getAllUsers = (token, successCbk, errorCbk) => {
   axiosInstance.get(nodeserverUrl + '/users/',
     { headers: { Authorization: 'Bearer ' + token} }
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}
+
+export const getAllGroups = (token, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/groups/',
+    { headers: { Authorization: 'Bearer ' + token } }
   )
   .then(successCbk)
   .catch(errorCbk)
@@ -50,10 +71,30 @@ export const getUser = (id, token, successCbk, errorCbk) => {
   .catch(errorCbk);
 }
 
+export const getGroup = (id, token, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/groups/' + id,
+    { headers: { Authorization: 'Bearer ' + token } }
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}
+
 export const updateUser = (id, token, email, successCbk, errorCbk) => {
   axiosInstance.put(nodeserverUrl + '/users/' + id,
     {
       email: email,
+      access_token: token
+    }
+  )
+  .then(successCbk)
+  .catch(errorCbk);
+}
+
+export const addMember = (id, token, title, members, successCbk, errorCbk) => {
+  axiosInstance.put(nodeserverUrl + '/groups/' + id,
+    {
+      title: title,
+      members: members,
       access_token: token
     }
   )
