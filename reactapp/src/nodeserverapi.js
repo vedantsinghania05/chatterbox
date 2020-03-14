@@ -112,7 +112,7 @@ export const updateUser = (id, token, email, successCbk, errorCbk) => {
   .catch(errorCbk);
 }
 
-export const updateGroup = (id, token, members, successCbk, errorCbk) => {
+export const updateGroupsMembers = (id, token, members, successCbk, errorCbk) => {
   axiosInstance.put(nodeserverUrl + '/groups/' + id,
     {
       members: members,

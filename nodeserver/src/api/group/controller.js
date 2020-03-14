@@ -33,7 +33,6 @@ export const update = ({ params, body, group }, res, next) =>
     .then(group => {
       if (!group) return next(resNotFound('Failed to find group'));
 
-      if (body.title) group.title = body.title;
       if (body.members) group.members = body.members
       return group.save();
     })

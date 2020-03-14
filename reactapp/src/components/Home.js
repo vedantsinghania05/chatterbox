@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Container, Row, Card, CardBody, Button, Alert, Form, FormGroup } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { createGroup, getAllGroups, getGroup, getAllUsers, updateGroup, createMessage, getMessages } from '../nodeserverapi'
+import { createGroup, getAllGroups, getGroup, getAllUsers, createMessage, getMessages, updateGroupsMembers } from '../nodeserverapi'
 
 class Home extends Component {
   constructor() {
@@ -176,7 +176,7 @@ class Home extends Component {
     console.log(newMembersList)
     console.log('IMPORTANT: ', group.id)
 
-    updateGroup(group.id , getUserToken(), newMembersList,
+    updateGroupsMembers(group.id , getUserToken(), newMembersList,
       response => {
         console.log('success!: ', response.data)
       },
@@ -230,6 +230,36 @@ class Home extends Component {
     return strungCharacters
   }
 
+  leaveGroup = (group) => {
+    let newMembersList = group.members
+    let index = 1
+    let signedInUserIndex = -1
+
+    for (let memberId of newMembersList) {
+      if (memberId === this.props.userInfo.id) {
+        console.log('>>>>>>>>>found')
+        signedInUserIndex = index
+      }
+      index++
+    }
+
+    if (signedInUserIndex) {
+      newMembersList.splice(signedInUserIndex-1, 1)
+    } else {
+      console.log(signedInUserIndex)
+      console.log('User not found in group memberList')
+    }
+
+    updateGroupsMembers(group.id, getUserToken(), newMembersList,
+      response => {
+        console.log(response.data)
+      },
+      error => {
+        console.log(error.message)
+      }  
+    )
+  }
+
 
   render() {
     const { groupTitle, groupList, showGroup, newMessage, groupsMessages, pageNo, newMemberUsername, groupTableIndex } = this.state;
@@ -271,6 +301,7 @@ class Home extends Component {
                     {groupList.map((group, index) => <tr key={index}>
                       <td><Button onClick={()=>this.openGroup(group.id)}>{group.title}</Button></td>
                       <td><Button onClick={()=>this.openAdder(group, index)}>+</Button></td>
+                      <td><Button onClick={()=>this.leaveGroup(group, index)}>x</Button></td>
                       {index === groupTableIndex && <td>
                         <input
                           name="newMemberUsername"
