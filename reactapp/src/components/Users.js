@@ -11,6 +11,8 @@ class Users extends Component {
   }
 
   componentDidMount = () => {
+    console.log('>>>>>>>>users: ', this.props.history.location)
+
     getAllUsers(getUserToken(),
       response => {
         this.setState({ userList: response.data });

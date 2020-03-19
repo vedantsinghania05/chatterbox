@@ -8,36 +8,47 @@ import { createGroup, getAllGroups, getGroup, getAllUsers, createMessage, getMes
 class Home extends Component {
   constructor() {
     super();
-    this.state = { groupTitle: '', groupList: [], showGroup: false, selectedGroup: undefined, newMemberUsername: '', groupTableIndex: undefined, newMessage: '', groupsMessages: [], pageNo: 1, sameId: undefined };
+    this.state = { groupsInitUsers: '', groupList: [], showGroup: false, selectedGroup: undefined, newMemberUsername: '', groupTableIndex: undefined, newMessage: '', groupsMessages: [], pageNo: 1, sameId: undefined };
   }
 
-  componentDidMount= () => {
-    console.log('hi')
-    getAllGroups(getUserToken(),
-      response => {
-        console.log('>>>>>>> success!: ', response.data)
+  componentDidUpdate = (prevProps, prevState) => {
 
-        let usersGroups = []
-        for (let group of response.data) {
-          for (let user of group.members) {
-            if (user === this.props.userInfo.id) {
-              usersGroups.push(group)
-            }
-          }
+    const { location } = this.props
+
+    let newGroupInfo = location.state ? location.state.groupInfo : undefined
+    let oldGroupInfo = prevProps.location.state ? prevProps.location.state.groupInfo : undefined
+
+    if (newGroupInfo && newGroupInfo!==oldGroupInfo) {
+      console.log('>>>>> groups id to check messages ', newGroupInfo.id)
+
+      getMessages(getUserToken(), newGroupInfo.id, 0,
+      response => {
+        console.log('success on the message call: ', response.data)
+
+        let tempGroupsMessages = []
+
+        for (let message of response.data) {
+        
+          message.poster = this.getUserNickname(message.poster.email)    
+
+          tempGroupsMessages.unshift(message)
         }
 
-        console.log('>>>>>>>>>> !!!', usersGroups)
-        this.setState({ groupList: usersGroups }) 
+        this.setState({ groupsMessages: tempGroupsMessages, sameId: newGroupInfo.id, selectedGroup: newGroupInfo })
       },
       error => {
-        console.log('error found: ', error.message)
+        console.log('message call failed: ', error.message)
       }
     )
+
+    }
+
+
   }
 
-  onChangeGroupTitle = (e) => {
+  onChangeGroupsInitUsers = (e) => {
     console.log('>>>>', e.target.value)
-    this.setState({ groupTitle: e.target.value })
+    this.setState({ groupsInitUsers: e.target.value })
   }
 
   onChangeNewMemberUsername = (e) => {
@@ -49,15 +60,29 @@ class Home extends Component {
     console.log(e.target.value)
   }
 
-  createGroup = () => {
-    const { groupTitle, groupList } = this.state;
+  createGroup = (e) => {
+    e.preventDefault()
+
+    const { groupsInitUsers, groupList } = this.state;
     console.log('>>>> creating group')
 
-    createGroup(groupTitle, this.props.userInfo.id,
+    let emailsToAdd = this.parseForUserEmails(groupsInitUsers)
+    emailsToAdd.unshift(this.props.userInfo.email)
+    console.log('emailsToAdd: ', emailsToAdd)
+
+    let groupsDefaultTitle = ''
+    for (let email of emailsToAdd) {
+      let nickname = this.getUserNickname(email)
+      groupsDefaultTitle = groupsDefaultTitle + nickname + ', '
+    }
+    console.log('groups default title: ', groupsDefaultTitle)
+    
+
+    createGroup(groupsDefaultTitle, emailsToAdd,
         response => {
             console.log('group created: ', response.data)
             groupList.push(response.data)
-            this.setState({ groupTitle: '' })
+            this.setState({ groupsInitUsers: '' })
         },
         error => {
             console.log('error found: ', error.message)
@@ -67,11 +92,24 @@ class Home extends Component {
     console.log(groupList)
   }
 
+  parseForUserEmails = (emailsString) => {
+    
+    let emailsList = emailsString.split(/[ ,]+/)
+
+    for (let email of emailsList) {
+      email = email.trim()
+    }
+
+    return emailsList
+
+  }
+
   openGroup = (groupId) => {
     console.log('GROUPID: ', groupId)
     getGroup(groupId, getUserToken(),
       response => {
         this.getGroupMessages(groupId)
+        console.log('*********************: ', response.data)
         this.setState({ selectedGroup: response.data, showGroup: true })
       },
       error => {
@@ -186,10 +224,12 @@ class Home extends Component {
     )
   }
 
-  postMessage = () => {
+  postMsg = (e) => {
+    e.preventDefault()
+
     const { selectedGroup, newMessage, groupsMessages } = this.state;
     console.log(this.props.userInfo)
-    console.log(selectedGroup)
+    console.log('>>>>>>> here', selectedGroup)
 
     createMessage(this.props.userInfo.id, selectedGroup.id, newMessage,
         response => {
@@ -262,97 +302,82 @@ class Home extends Component {
 
 
   render() {
-    const { groupTitle, groupList, showGroup, newMessage, groupsMessages, pageNo, newMemberUsername, groupTableIndex } = this.state;
+    const { groupsInitUsers, groupList, showGroup, newMessage, groupsMessages, pageNo, newMemberUsername, groupTableIndex, selectedGroup } = this.state;
 
     return (
       <Container className="dashboard">
         <Row>
           <Col md={12}>
-            <h3 className="page-title">Home</h3>
+            <Card>
+              <CardBody>
+
+                <Form onSubmit={this.createGroup}>
+
+                  <input
+                    name="groupsInitUsers"
+                    placeholder="Title"
+                    value={groupsInitUsers}
+                    onChange={this.onChangeGroupsInitUsers}
+                  />
+                  
+                </Form>
+
+              </CardBody>
+            </Card>
           </Col>
         </Row>
+
+        <Row>
+          <Col md={12}>
+            <br></br>
+            <h3 className="page-title">{selectedGroup ? selectedGroup.title : 'Home'}</h3>
+          </Col>
+        </Row>
+
+
+   {/*     <Row>
+          <Col md={12}>
+            <h3 className="page-title">Home</h3>
+          </Col>
+        </Row> */}
+
+
+
         <Row>
           <Col md={12}>
             <Card>
               <CardBody>
 
-                <Form>
-                  <FormGroup>
-                    <input
-                      name="groupTitle"
-                      type="string"
-                      placeholder="Title"
-                      value={groupTitle}
-                      onChange={this.onChangeGroupTitle}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Button onClick={this.createGroup}>Create</Button>
-                  </FormGroup>
-                </Form>
-
                 <table>
                   <thead>
                     <tr>
-                      <th><p>group</p></th>
+                      <th>messages</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {groupList.map((group, index) => <tr key={index}>
-                      <td><Button onClick={()=>this.openGroup(group.id)}>{group.title}</Button></td>
-                      <td><Button onClick={()=>this.openAdder(group, index)}>+</Button></td>
-                      <td><Button onClick={()=>this.leaveGroup(group, index)}>x</Button></td>
-                      {index === groupTableIndex && <td>
-                        <input
-                          name="newMemberUsername"
-                          type="string"
-                          placeholder="enter username"
-                          value={newMemberUsername}
-                          onChange={this.onChangeNewMemberUsername}/>
-                      </td>}
-                      {index === groupTableIndex && <td>
-                        <Button onClick={()=>this.checkValidUsername(group)}>Add</Button>
-                      </td>}
+                    {groupsMessages.map((message, index) => <tr key={index}>
+                      <td>{message.poster + '-'}</td>
+                      <td><br></br></td>
+                      <td>{message.content}</td>
                     </tr>)}
                   </tbody>
-                </table>
+                </table> 
 
-                {showGroup && <span>
+                <Button onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>
+                <Button onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>
+
+
+                <Form onSubmit={this.postMsg}>
+
+                  <input
+                    name="newMessage"
+                    placeholder="enter message"
+                    value={newMessage}
+                    onChange={this.onChangeNewMessage}
+                  />
                   
-                  <Form>
-                    <FormGroup>
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>messages</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {groupsMessages.map((message, index) => <tr key={index}>
-                            <td>{message.poster + '-'}</td>
-                            <td><br></br></td>
-                            <td>{message.content}</td>
-                          </tr>)}
-                        </tbody>
-                      </table> 
-                    </FormGroup>
-                    <FormGroup>
-                      <Button onClick={()=>this.pageNoChanger(false)}>{'<'}</Button>
-                      <Button onClick={()=>this.pageNoChanger(true)}>{'>'}</Button>
-                    </FormGroup>
-                    <FormGroup>
-                      <input
-                        name="newMessage"
-                        type="string"
-                        placeholder="enter message"
-                        value={newMessage}
-                        onChange={this.onChangeNewMessage}
-                      />
-                      <Button onClick={this.postMessage}>=></Button>
-                    </FormGroup>
-                  </Form>
+                </Form>
 
-                </span>}
 
               </CardBody>
             </Card>

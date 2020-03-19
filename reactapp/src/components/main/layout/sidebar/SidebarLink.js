@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Badge } from 'reactstrap';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const SidebarLink = ({
-  title, icon, newLink, route, onClick,
+  title, icon, newLink, to, onClick,
 }) => (
-  <NavLink
-    to={route}
+  <Link
+    to={to}
     onClick={onClick}
-    activeClassName="sidebar__link-active"
+    activeclassname="sidebar__link-active"
   >
     <li className="sidebar__link">
       {icon ? <span className={`sidebar__link-icon lnr lnr-${icon}`} /> : ''}
@@ -18,7 +18,7 @@ const SidebarLink = ({
         {newLink ? <Badge className="sidebar__link-badge"><span>New</span></Badge> : ''}
       </p>
     </li>
-  </NavLink>
+  </Link>
 );
 
 SidebarLink.propTypes = {
