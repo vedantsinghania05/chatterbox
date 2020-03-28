@@ -306,26 +306,6 @@ class Home extends Component {
 
     return (
       <Container className="dashboard">
-        <Row>
-          <Col md={12}>
-            <Card>
-              <CardBody>
-
-                <Form onSubmit={this.createGroup}>
-
-                  <input
-                    name="groupsInitUsers"
-                    placeholder="Title"
-                    value={groupsInitUsers}
-                    onChange={this.onChangeGroupsInitUsers}
-                  />
-                  
-                </Form>
-
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
 
         <Row>
           <Col md={12}>
@@ -335,25 +315,28 @@ class Home extends Component {
         </Row>
 
 
-   {/*     <Row>
-          <Col md={12}>
-            <h3 className="page-title">Home</h3>
-          </Col>
-        </Row> */}
-
-
-
         <Row>
           <Col md={12}>
             <Card>
               <CardBody>
 
+                <Form onSubmit={this.createGroup}>
+
+                  <input
+                    name="groupsInitUsers"
+                    placeholder="Enter users"
+                    value={groupsInitUsers}
+                    onChange={this.onChangeGroupsInitUsers}
+                  />
+
+                </Form>
+
+                <hr></hr>
+
+                <Button size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>
+                <Button size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>
+
                 <table>
-                  <thead>
-                    <tr>
-                      <th>messages</th>
-                    </tr>
-                  </thead>
                   <tbody>
                     {groupsMessages.map((message, index) => <tr key={index}>
                       <td>{message.poster + '-'}</td>
@@ -363,9 +346,7 @@ class Home extends Component {
                   </tbody>
                 </table> 
 
-                <Button onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>
-                <Button onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>
-
+                <hr></hr>
 
                 <Form onSubmit={this.postMsg}>
 

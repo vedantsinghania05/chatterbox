@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { password as passwordAuth, master, token } from '../../services/passport'
-import { create, index, show, update } from './controller'
+import { create, index, show, update, getUsersGroups } from './controller'
 import { schema } from './model'
 export Group, { schema } from './model'
 
@@ -13,8 +13,7 @@ router.post('/',
 
 router.get('/',
   token({ required: true }),
-  query(),
-  index)
+  getUsersGroups)
 
 router.get('/:id',
   token({ required: true }),

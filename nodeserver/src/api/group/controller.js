@@ -2,6 +2,8 @@ import { resInternal, resOk, resNotFound, resNoContent, resCreated } from '../..
 import { Group } from '.'
 import { User } from '../user'
 
+const ObjectId = require('mongodb').ObjectID
+
 export const create = ({ body }, res, next) => {
   let fields = { title: body.title, members: body.members };
 
@@ -22,6 +24,44 @@ export const create = ({ body }, res, next) => {
         .catch(next)
     })
 
+}
+
+/* 
+
+export const getMessages = ({ query }, res, next) => {
+  let { group, skipCount } = query
+  skipCount = Number(skipCount)
+
+  console.log('>>>>>>> query', query)
+
+  return Message.find({ group: group })
+    .sort('-createdAt')
+    .limit(10)
+    .skip(skipCount)
+    .then(messages => {
+      console.log('*******: ', messages)
+      if (!messages) return next(resInternal('Failed to find messages'));
+      return populateManyPosters(messages);
+    })
+    .then(messages => {
+      console.log('>>>>>>>>>', messages)
+      if (!messages) return next(resInternal('Failed to populate messages'));
+      return resOk(res, messages.map(m => m.view()));
+    })
+    .catch(next)
+}
+
+*/
+
+export const getUsersGroups = ({ query }, res, next) => {
+  let { user } = query;
+
+  Group.find({ members: { $in: ObjectId(user) }})
+    .then(groups => {
+      if (!groups) return next(resInternal('Failed to find messages'))
+      return resOk(res, groups.map(g => g.view()));
+    })
+    .catch(next)
 }
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>

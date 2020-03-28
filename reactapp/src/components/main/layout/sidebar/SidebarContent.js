@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SidebarLink from './SidebarLink';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../../../../redux/containers/SignedInUserCtr';
-import { Link } from "react-router-dom";
+import { Button } from 'reactstrap';
 import { getAllGroups } from '../../../../nodeserverapi';
 //import SidebarCategory from './SidebarCategory';
 
@@ -17,24 +17,11 @@ class SidebarContent extends Component {
   };
 
   componentDidMount = () => {
-    getAllGroups(getUserToken(),
+    getAllGroups(getUserToken(), this.props.userInfo.id,
       response => {
-        console.log('all groups from database', response.data)
+        console.log('>>>>>>>>>>>> all groups from database', response.data)
 
-        let usersGroups = []
-
-        for (let group of response.data) {
-          console.log('group & group.members: ', group, group.members)
-          for (let userId of group.members) {
-            console.log('userId & current user: ', userId, this.props.userInfo.id)
-            if (userId === this.props.userInfo.id) {
-              console.log('group found: ', group)
-              usersGroups.push(group)
-            }
-          }
-        }
-
-        this.setState({ groupList: usersGroups })
+        this.setState({ groupList: response.data })
       },
       error => {
         console.log('error found: ', error.message)
@@ -56,13 +43,11 @@ class SidebarContent extends Component {
           <SidebarLink title="Log Out" icon="exit" route="/signin" onClick={this.hideSidebar} />
         </ul>*/}
 
-        <ul className="sidebar__block" >Groups</ul>
-
-        <ul className="sidebar__block">
-          {groupList.map((group, index) =>  
-            <SidebarLink key={index} title={group.title} to={{pathname:'/', state: {groupInfo: group}}} onClick={this.hideSidebar} />
+          {groupList.map((group, index) => 
+            <ul className="sidebar__block">
+              <SidebarLink key={index} title={group.title} to={{pathname:'/', state: {groupInfo: group}}} onClick={this.hideSidebar} />
+            </ul>
           )}  
-        </ul>
 
 
 

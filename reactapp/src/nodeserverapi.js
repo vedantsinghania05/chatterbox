@@ -69,8 +69,8 @@ export const getAllUsers = (token, successCbk, errorCbk) => {
   .catch(errorCbk)
 }
 
-export const getAllGroups = (token, successCbk, errorCbk) => {
-  axiosInstance.get(nodeserverUrl + '/groups/',
+export const getAllGroups = (token, user, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/groups?user=' + user,
     { headers: { Authorization: 'Bearer ' + token } }
   )
   .then(successCbk)
