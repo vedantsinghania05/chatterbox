@@ -26,6 +26,19 @@ export const create = ({ body }, res, next) => {
 
 }
 
+export const getGroupMembers = ({ params, group }, res, next) => {
+  Group.findById(params.id === 'me' ? group.id : params.id)
+    .then(group => {
+      if (!group) return next(resInternal('Failed to find group'))
+      User.find({ _id: group.members })
+    .then(members => {
+      if (!members) return next(resInternal('Failed to find members'))
+      return resOk(res, members.map(m => m.view()))
+    })
+    })
+    .catch(next)
+}
+
 /* 
 
 export const getMessages = ({ query }, res, next) => {
@@ -54,7 +67,11 @@ export const getMessages = ({ query }, res, next) => {
 */
 
 export const getUsersGroups = ({ query }, res, next) => {
-  let { user } = query;
+  let { user } = query
+
+  console.log('>>>>>>>>>')
+  console.log(user)
+  console.log('>>>>>>>>>')
 
   Group.find({ members: { $in: ObjectId(user) }})
     .then(groups => {
@@ -62,7 +79,7 @@ export const getUsersGroups = ({ query }, res, next) => {
       return resOk(res, groups.map(g => g.view()));
     })
     .catch(next)
-}
+} 
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
   Group.find(query, select, cursor)

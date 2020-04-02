@@ -61,6 +61,8 @@ export const createMessage = (poster, group, content, successCbk, errorCbk) => {
   .catch(errorCbk)
 }
 
+// DISABLED SO THAT GETMEMBERS CAN RUN
+
 export const getAllUsers = (token, successCbk, errorCbk) => {
   axiosInstance.get(nodeserverUrl + '/users/',
     { headers: { Authorization: 'Bearer ' + token} }
@@ -93,8 +95,8 @@ export const getUser = (id, token, successCbk, errorCbk) => {
   .catch(errorCbk);
 }
 
-export const getGroup = (id, token, successCbk, errorCbk) => {
-  axiosInstance.get(nodeserverUrl + '/groups/' + id,
+export const getMembers = (token, groupId, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/groups/' + groupId,
     { headers: { Authorization: 'Bearer ' + token } }
   )
   .then(successCbk)

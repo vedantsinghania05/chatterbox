@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Container, Row, Card, CardBody, Button, Alert, Form, FormGroup } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { createGroup, getAllGroups, getGroup, getAllUsers, createMessage, getMessages, updateGroupsMembers } from '../nodeserverapi'
+import { createGroup, getAllUsers, createMessage, getMessages, updateGroupsMembers } from '../nodeserverapi'
 
 class Home extends Component {
   constructor() {
@@ -22,24 +22,24 @@ class Home extends Component {
       console.log('>>>>> groups id to check messages ', newGroupInfo.id)
 
       getMessages(getUserToken(), newGroupInfo.id, 0,
-      response => {
-        console.log('success on the message call: ', response.data)
+        response => {
+          console.log('success on the message call: ', response.data)
 
-        let tempGroupsMessages = []
+          let tempGroupsMessages = []
 
-        for (let message of response.data) {
-        
-          message.poster = this.getUserNickname(message.poster.email)    
+          for (let message of response.data) {
+          
+            message.poster = this.getUserNickname(message.poster.email)    
 
-          tempGroupsMessages.unshift(message)
+            tempGroupsMessages.unshift(message)
+          }
+
+          this.setState({ groupsMessages: tempGroupsMessages, sameId: newGroupInfo.id, selectedGroup: newGroupInfo })
+        },
+        error => {
+          console.log('message call failed: ', error.message)
         }
-
-        this.setState({ groupsMessages: tempGroupsMessages, sameId: newGroupInfo.id, selectedGroup: newGroupInfo })
-      },
-      error => {
-        console.log('message call failed: ', error.message)
-      }
-    )
+      )
 
     }
 
@@ -102,20 +102,6 @@ class Home extends Component {
 
     return emailsList
 
-  }
-
-  openGroup = (groupId) => {
-    console.log('GROUPID: ', groupId)
-    getGroup(groupId, getUserToken(),
-      response => {
-        this.getGroupMessages(groupId)
-        console.log('*********************: ', response.data)
-        this.setState({ selectedGroup: response.data, showGroup: true })
-      },
-      error => {
-        console.log('error found: ', error.message)
-      }
-    )
   }
 
   openAdder = (group, index) => {
@@ -305,66 +291,67 @@ class Home extends Component {
     const { groupsInitUsers, groupList, showGroup, newMessage, groupsMessages, pageNo, newMemberUsername, groupTableIndex, selectedGroup } = this.state;
 
     return (
-      <Container className="dashboard">
+        <Container className="dashboard">
 
-        <Row>
-          <Col md={12}>
-            <br></br>
-            <h3 className="page-title">{selectedGroup ? selectedGroup.title : 'Home'}</h3>
-          </Col>
-        </Row>
-
-
-        <Row>
-          <Col md={12}>
-            <Card>
-              <CardBody>
-
-                <Form onSubmit={this.createGroup}>
-
-                  <input
-                    name="groupsInitUsers"
-                    placeholder="Enter users"
-                    value={groupsInitUsers}
-                    onChange={this.onChangeGroupsInitUsers}
-                  />
-
-                </Form>
-
-                <hr></hr>
-
-                <Button size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>
-                <Button size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>
-
-                <table>
-                  <tbody>
-                    {groupsMessages.map((message, index) => <tr key={index}>
-                      <td>{message.poster + '-'}</td>
-                      <td><br></br></td>
-                      <td>{message.content}</td>
-                    </tr>)}
-                  </tbody>
-                </table> 
-
-                <hr></hr>
-
-                <Form onSubmit={this.postMsg}>
-
-                  <input
-                    name="newMessage"
-                    placeholder="enter message"
-                    value={newMessage}
-                    onChange={this.onChangeNewMessage}
-                  />
-                  
-                </Form>
+            <Row>
+              <Col md={12}>
+                <br></br>
+                <h3 className="page-title">{selectedGroup ? selectedGroup.title : 'Home'}</h3>
+              </Col>
+            </Row>
 
 
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </Container>      
+            <Row>
+              <Col md={12}>
+                <Card>
+                  <CardBody>
+
+                    <Form onSubmit={this.createGroup}>
+
+                      <input
+                        name="groupsInitUsers"
+                        placeholder="Enter users"
+                        value={groupsInitUsers}
+                        onChange={this.onChangeGroupsInitUsers}
+                      />
+
+                    </Form>
+
+                    <hr></hr>
+
+                    <Button size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>
+                    <Button size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>
+
+                    <table>
+                      <tbody>
+                        {groupsMessages.map((message, index) => <tr key={index}>
+                          <td>{message.poster + '-'}</td>
+                          <td><br></br></td>
+                          <td>{message.content}</td>
+                        </tr>)}
+                      </tbody>
+                    </table> 
+
+                    <hr></hr>
+
+                    <Form onSubmit={this.postMsg}>
+
+                      <input
+                        name="newMessage"
+                        placeholder="enter message"
+                        value={newMessage}
+                        onChange={this.onChangeNewMessage}
+                      />
+                      
+                    </Form>
+
+
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+
+        </Container>    
     );
   }
 }

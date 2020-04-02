@@ -34,6 +34,7 @@ class SidebarContent extends Component {
     onClick();
   };
 
+
   render() {
     const { groupList } = this.state;
 
@@ -45,7 +46,13 @@ class SidebarContent extends Component {
 
           {groupList.map((group, index) => 
             <ul className="sidebar__block">
-              <SidebarLink key={index} title={group.title} to={{pathname:'/', state: {groupInfo: group}}} onClick={this.hideSidebar} />
+              <SidebarLink key={index} title={group.title} to={{pathname:'/', state: {groupId: group}}} onClick={this.hideSidebar} />
+
+              <div className="form__form-group">
+                <div className="form__form-group-field">
+                  <SidebarLink key={index} title={'manage ' + group.title} to={{pathname:'/manage', state: {groupInfo: group.id}}} onClick={this.hideSidebar} />
+                </div>
+              </div>
             </ul>
           )}  
 
