@@ -10,26 +10,19 @@ class Home extends Component {
     this.state = { groupsInitUsers: '', groupList: [], showGroup: false, selectedGroup: undefined, newMemberUsername: '', groupTableIndex: undefined, newMessage: '', groupsMessages: [], pageNo: 1, sameId: undefined };
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
-
+  componentDidUpdate = (prevProps) => {
     const { location } = this.props
 
     let newGroupInfo = location.state ? location.state.groupInfo : undefined
     let oldGroupInfo = prevProps.location.state ? prevProps.location.state.groupInfo : undefined
 
     if (newGroupInfo && newGroupInfo!==oldGroupInfo) {
-      console.log('>>>>> groups id to check messages ', newGroupInfo.id)
-
       getMessage(getUserToken(), newGroupInfo.id, 0,
         response => {
-          console.log('success on the message call: ', response.data)
-
           let tempGroupsMessages = []
 
-          for (let message of response.data) {
-          
+          for (let message of response.data) {    
             message.poster = this.getUserNickname(message.poster.email)    
-
             tempGroupsMessages.unshift(message)
           }
 
@@ -39,14 +32,10 @@ class Home extends Component {
           console.log('message call failed: ', error.message)
         }
       )
-
     }
-
-
   }
 
   onChangeGroupsInitUsers = (e) => {
-    console.log('>>>>', e.target.value)
     this.setState({ groupsInitUsers: e.target.value })
   }
 
@@ -56,39 +45,31 @@ class Home extends Component {
 
   onChangeNewMessage = (e) => {
     this.setState({ newMessage: e.target.value })
-    console.log(e.target.value)
   }
 
   createGroup = (e) => {
     e.preventDefault()
 
     const { groupsInitUsers, groupList } = this.state;
-    console.log('>>>> creating group')
 
     let emailsToAdd = this.parseForUserEmails(groupsInitUsers)
     emailsToAdd.unshift(this.props.userInfo.email)
-    console.log('emailsToAdd: ', emailsToAdd)
 
     let groupsDefaultTitle = ''
     for (let email of emailsToAdd) {
       let nickname = this.getUserNickname(email)
       groupsDefaultTitle = groupsDefaultTitle + nickname + ', '
     }
-    console.log('groups default title: ', groupsDefaultTitle)
-    
 
     createGroup(groupsDefaultTitle, emailsToAdd,
         response => {
-            console.log('group created: ', response.data)
             groupList.push(response.data)
             this.setState({ groupsInitUsers: '' })
         },
         error => {
-            console.log('error found: ', error.message)
+          console.log('error found: ', error.message)
         }
     )
-
-    console.log(groupList)
   }
 
   parseForUserEmails = (emailsString) => {

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
-import { Col, Container, Row, Card, CardBody, Button, Alert, Form, FormGroup } from 'reactstrap';
-import {  } from '../nodeserverapi'
+import { signedInUserMstp, signedInUserMdtp } from '../redux/containers/SignedInUserCtr';
+import { Col, Container, Row, Card, CardBody, Form, FormGroup } from 'reactstrap';
 
 class Home extends Component {
   constructor() {
@@ -11,16 +10,11 @@ class Home extends Component {
   }
 
   onChangeNewMessage = (e) => {
-    console.log(e.target.value)
     this.setState({ newMessage: e.target.value })
   }
 
   render() {
-    const { newMessage, messages } = this.state
-
-    console.log('>>>>>>>', this.props.history.location.state)
-
-    /* this.props.history.location.state */
+    const { newMessage } = this.state
 
     return (
       <Container className="dashboard">
