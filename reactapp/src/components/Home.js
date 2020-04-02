@@ -29,7 +29,6 @@ class Home extends Component {
           this.setState({ groupsMessages: tempGroupsMessages, sameId: newGroupInfo.id, selectedGroup: newGroupInfo })
         },
         error => {
-          console.log('message call failed: ', error.message)
         }
       )
     }
@@ -37,10 +36,6 @@ class Home extends Component {
 
   onChangeGroupsInitUsers = (e) => {
     this.setState({ groupsInitUsers: e.target.value })
-  }
-
-  onChangeNewMemberUsername = (e) => {
-    this.setState({ newMemberUsername: e.target.value })
   }
 
   onChangeNewMessage = (e) => {
@@ -56,19 +51,19 @@ class Home extends Component {
     emailsToAdd.unshift(this.props.userInfo.email)
 
     let groupsDefaultTitle = ''
+
     for (let email of emailsToAdd) {
       let nickname = this.getUserNickname(email)
       groupsDefaultTitle = groupsDefaultTitle + nickname + ', '
     }
 
     createGroup(groupsDefaultTitle, emailsToAdd,
-        response => {
-            groupList.push(response.data)
-            this.setState({ groupsInitUsers: '' })
-        },
-        error => {
-          console.log('error found: ', error.message)
-        }
+      response => {
+          groupList.push(response.data)
+          this.setState({ groupsInitUsers: '' })
+      },
+      error => {
+      }
     )
   }
 
@@ -81,23 +76,11 @@ class Home extends Component {
     }
 
     return emailsList
-
-  }
-
-  openAdder = (group, index) => {
-    const {  } = this.state
-
-    console.log('adding member')
-    console.log('>>>>> ', group)  
-
-    this.setState({ groupTableIndex: index })  
   }
 
   getGroupMessages = (groupId, newPageNo) => {
     const { pageNo } = this.state;
     let skipCount;
-
-    console.log('newPageNo & pageNo: ', newPageNo, pageNo)
 
     if (newPageNo) {
       skipCount = newPageNo * 10
@@ -105,11 +88,8 @@ class Home extends Component {
       skipCount = pageNo * 10
     }
 
-    console.log('skipCount:', skipCount)
-
     getMessage(getUserToken(), groupId, skipCount-10,
       response => {
-        console.log('success on the message call: ', response.data)
 
         let tempGroupsMessages = []
 
@@ -123,7 +103,6 @@ class Home extends Component {
         this.setState({ groupsMessages: tempGroupsMessages, sameId: groupId })
       },
       error => {
-        console.log('message call failed: ', error.message)
       }
     )
   }
@@ -132,23 +111,15 @@ class Home extends Component {
     const { pageNo, sameId } = this.state;
     let newPageNo = pageNo;
 
-    console.log('pageNo before update:', pageNo)
-
     if (shouldIncrease) {
-      console.log('increasing')
       newPageNo = pageNo + 1
     } else {
-      console.log('checking for valid decrease')
       if (pageNo > 1) {
-        console.log('decreasing from ', pageNo, ' to ', pageNo-1)
         newPageNo = pageNo - 1
       }
     }
 
-    console.log('getting group messages')
     this.getGroupMessages(sameId, newPageNo)
-
-    console.log('setting pageNo to ', newPageNo)
     this.setState({ pageNo: newPageNo })
   }
 
@@ -191,7 +162,6 @@ class Home extends Component {
           this.setState({ newMessage: '' })     
         },
         error => {
-          console.log('error found: ', error.message)
         }
       ) 
   }
@@ -218,7 +188,6 @@ class Home extends Component {
 
     for (let memberId of newMembersList) {
       if (memberId === this.props.userInfo.id) {
-        console.log('>>>>>>>>>found')
         signedInUserIndex = index
       }
       index++
@@ -226,86 +195,70 @@ class Home extends Component {
 
     if (signedInUserIndex) {
       newMembersList.splice(signedInUserIndex-1, 1)
-    } else {
-      console.log(signedInUserIndex)
-      console.log('User not found in group memberList')
     }
 
     updateMembersGroup(group.id, getUserToken(), newMembersList,
       response => {
-        console.log(response.data)
       },
       error => {
-        console.log(error.message)
       }  
     )
   }
 
-
   render() {
-    const { groupsInitUsers, groupList, showGroup, newMessage, groupsMessages, pageNo, newMemberUsername, groupTableIndex, selectedGroup } = this.state;
+    const { groupsInitUsers, newMessage, groupsMessages, selectedGroup } = this.state;
 
     return (
         <Container className="dashboard">
+          <Row>
+            <Col md={12}>
+              <br></br>
+              <h3 className="page-title">{selectedGroup ? selectedGroup.title : 'Home'}</h3>
+            </Col>
+          </Row>
 
-            <Row>
-              <Col md={12}>
-                <br></br>
-                <h3 className="page-title">{selectedGroup ? selectedGroup.title : 'Home'}</h3>
-              </Col>
-            </Row>
+          <Row>
+            <Col md={12}>
+              <Card>
+                <CardBody>
+                  <Form onSubmit={this.createGroup}>
+                    <input
+                      name="groupsInitUsers"
+                      placeholder="Enter users"
+                      value={groupsInitUsers}
+                      onChange={this.onChangeGroupsInitUsers}
+                    />
+                  </Form>
 
+                  <hr></hr>
 
-            <Row>
-              <Col md={12}>
-                <Card>
-                  <CardBody>
+                  <Button size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>
+                  <Button size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>
 
-                    <Form onSubmit={this.createGroup}>
+                  <table>
+                    <tbody>
+                      {groupsMessages.map((message, index) => <tr key={index}>
+                        <td>{message.poster + '-'}</td>
+                        <td><br></br></td>
+                        <td>{message.content}</td>
+                      </tr>)}
+                    </tbody>
+                  </table> 
 
-                      <input
-                        name="groupsInitUsers"
-                        placeholder="Enter users"
-                        value={groupsInitUsers}
-                        onChange={this.onChangeGroupsInitUsers}
-                      />
+                  <hr></hr>
 
-                    </Form>
-
-                    <hr></hr>
-
-                    <Button size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>
-                    <Button size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>
-
-                    <table>
-                      <tbody>
-                        {groupsMessages.map((message, index) => <tr key={index}>
-                          <td>{message.poster + '-'}</td>
-                          <td><br></br></td>
-                          <td>{message.content}</td>
-                        </tr>)}
-                      </tbody>
-                    </table> 
-
-                    <hr></hr>
-
-                    <Form onSubmit={this.postMsg}>
-
-                      <input
-                        name="newMessage"
-                        placeholder="enter message"
-                        value={newMessage}
-                        onChange={this.onChangeNewMessage}
-                      />
-                      
-                    </Form>
-
-
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-
+                  <Form onSubmit={this.postMsg}>
+                    <input
+                      name="newMessage"
+                      placeholder="enter message"
+                      value={newMessage}
+                      onChange={this.onChangeNewMessage}
+                    />                    
+                  </Form>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
         </Container>    
     );
   }

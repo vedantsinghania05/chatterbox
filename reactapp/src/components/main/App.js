@@ -31,7 +31,6 @@ class App extends Component {
         this.props.setUserInfo(response.data);
       },
       error => {
-        console.log('Failed to get user data', error.message);
         this.props.clearUser();
       });
   }

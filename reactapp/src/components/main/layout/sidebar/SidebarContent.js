@@ -20,7 +20,6 @@ class SidebarContent extends Component {
         if (response.data) this.setState({ groupList: response.data })
       },
       error => {
-        console.log('Failed to get all groups: ', error.message)
       }
     )
   }
