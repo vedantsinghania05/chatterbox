@@ -2,7 +2,7 @@ import React, { Component, useReducer } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Container, Row, Card, CardBody, Button, Alert, Form, FormGroup } from 'reactstrap';
-import { getMembers, getUser } from '../nodeserverapi'
+import { getGroup } from '../nodeserverapi'
 
 class ManageGroups extends Component {
   constructor() {
@@ -11,10 +11,7 @@ class ManageGroups extends Component {
 	}
 	
 	componentDidMount = () => {
-
-		console.log('MOUNTING')
-
-		getMembers(getUserToken(), this.props.location.state.groupId, 
+		getGroup(getUserToken(), this.props.location.state.groupId, 
 			response => {
 				console.log('>>> members ', response.data)
 			},

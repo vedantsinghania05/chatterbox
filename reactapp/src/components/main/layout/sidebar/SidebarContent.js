@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import SidebarLink from './SidebarLink';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../../../../redux/containers/SignedInUserCtr';
-import { Button } from 'reactstrap';
-import { getAllGroups } from '../../../../nodeserverapi';
-//import SidebarCategory from './SidebarCategory';
+import { getAllGroup } from '../../../../nodeserverapi';
 
 class SidebarContent extends Component {
   constructor() {
@@ -17,14 +15,12 @@ class SidebarContent extends Component {
   };
 
   componentDidMount = () => {
-    getAllGroups(getUserToken(), this.props.userInfo.id,
+    getAllGroup(getUserToken(),
       response => {
-        console.log('>>>>>>>>>>>> all groups from database', response.data)
-
-        this.setState({ groupList: response.data })
+        if (response.data) this.setState({ groupList: response.data })
       },
       error => {
-        console.log('error found: ', error.message)
+        console.log('Failed to get all groups: ', error.message)
       }
     )
   }
@@ -33,7 +29,6 @@ class SidebarContent extends Component {
     const { onClick } = this.props;
     onClick();
   };
-
 
   render() {
     const { groupList } = this.state;
@@ -44,20 +39,17 @@ class SidebarContent extends Component {
           <SidebarLink title="Log Out" icon="exit" route="/signin" onClick={this.hideSidebar} />
         </ul>*/}
 
-          {groupList.map((group, index) => 
-            <ul className="sidebar__block">
-              <SidebarLink key={index} title={group.title} to={{pathname:'/', state: {groupId: group}}} onClick={this.hideSidebar} />
+        {groupList.map((group, index) => 
+          <ul className="sidebar__block">
+            <SidebarLink key={index} title={group.title} to={{pathname:'/', state: {groupId: group}}} onClick={this.hideSidebar} />
 
-              <div className="form__form-group">
-                <div className="form__form-group-field">
-                  <SidebarLink key={index} title={'manage ' + group.title} to={{pathname:'/manage', state: {groupInfo: group.id}}} onClick={this.hideSidebar} />
-                </div>
+            <div className="form__form-group">
+              <div className="form__form-group-field">
+                <SidebarLink key={index} title={'manage ' + group.title} to={{pathname:'/manage', state: {groupInfo: group.id}}} onClick={this.hideSidebar} />
               </div>
-            </ul>
-          )}  
-
-
-
+            </div>
+          </ul>
+        )}  
       </div>
     );
   }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Container, Row, Card, CardBody, Button, Alert } from 'reactstrap';
-import { getAllUsers, deleteUser } from '../nodeserverapi'
+import { getAllUser, deleteUser } from '../nodeserverapi'
 
 class Users extends Component {
   constructor() {
@@ -11,9 +11,7 @@ class Users extends Component {
   }
 
   componentDidMount = () => {
-    console.log('>>>>>>>>users: ', this.props.history.location)
-
-    getAllUsers(getUserToken(),
+    getAllUser(getUserToken(),
       response => {
         this.setState({ userList: response.data });
       },

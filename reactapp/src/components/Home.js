@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
-import { Col, Container, Row, Card, CardBody, Button, Alert, Form, FormGroup } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import { createGroup, getAllUsers, createMessage, getMessages, updateGroupsMembers } from '../nodeserverapi'
+import { Col, Container, Row, Card, CardBody, Button, Form } from 'reactstrap';
+import { createGroup, getAllUser, createMessage, getMessage, updateMembersGroup } from '../nodeserverapi'
 
 class Home extends Component {
   constructor() {
@@ -21,7 +20,7 @@ class Home extends Component {
     if (newGroupInfo && newGroupInfo!==oldGroupInfo) {
       console.log('>>>>> groups id to check messages ', newGroupInfo.id)
 
-      getMessages(getUserToken(), newGroupInfo.id, 0,
+      getMessage(getUserToken(), newGroupInfo.id, 0,
         response => {
           console.log('success on the message call: ', response.data)
 
@@ -127,7 +126,7 @@ class Home extends Component {
 
     console.log('skipCount:', skipCount)
 
-    getMessages(getUserToken(), groupId, skipCount-10,
+    getMessage(getUserToken(), groupId, skipCount-10,
       response => {
         console.log('success on the message call: ', response.data)
 
@@ -174,11 +173,9 @@ class Home extends Component {
 
   checkValidUsername = (group) => {
     const { newMemberUsername } = this.state;
-    console.log('here: ', newMemberUsername)
 
-    getAllUsers(getUserToken(),
+    getAllUser(getUserToken(),
       response => {
-        console.log('success!', response.data)
         for (let user of response.data) {
           if (user.email === newMemberUsername) {
             this.addMember(user.id, group)
@@ -186,26 +183,18 @@ class Home extends Component {
         }
       },
       error => {
-        console.log('error found: ', error.message)
       }
     )
-
   }
 
   addMember = (userId, group) => {
-    console.log('<><><><><><><><><><><><><><>', userId)
-
     let newMembersList = [...group.members]
     newMembersList.push(userId)
-    console.log(newMembersList)
-    console.log('IMPORTANT: ', group.id)
 
-    updateGroupsMembers(group.id , getUserToken(), newMembersList,
+    updateMembersGroup(group.id , getUserToken(), newMembersList,
       response => {
-        console.log('success!: ', response.data)
       },
       error => {
-        console.log('error found: ', error.message)
       }
     )
   }
@@ -213,27 +202,12 @@ class Home extends Component {
   postMsg = (e) => {
     e.preventDefault()
 
-    const { selectedGroup, newMessage, groupsMessages } = this.state;
-    console.log(this.props.userInfo)
-    console.log('>>>>>>> here', selectedGroup)
+    const { selectedGroup, newMessage } = this.state;
 
     createMessage(this.props.userInfo.id, selectedGroup.id, newMessage,
         response => {
-          console.log('>>>>>>>>>>>>>>>>', response.data)
-
           this.getGroupMessages(selectedGroup.id, 0)
-
-          this.setState({ newMessage: '' })
-
- /*         let alteredMessage = response.data
-
-          alteredMessage.poster = this.getUserNickname(response.data.poster.email)
-
-          let tempGroupsMessages = [...groupsMessages]
-          tempGroupsMessages.push(alteredMessage)
-
-          this.setState({ groupsMessages: tempGroupsMessages }) */
-      
+          this.setState({ newMessage: '' })     
         },
         error => {
           console.log('error found: ', error.message)
@@ -276,7 +250,7 @@ class Home extends Component {
       console.log('User not found in group memberList')
     }
 
-    updateGroupsMembers(group.id, getUserToken(), newMembersList,
+    updateMembersGroup(group.id, getUserToken(), newMembersList,
       response => {
         console.log(response.data)
       },

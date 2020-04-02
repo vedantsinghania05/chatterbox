@@ -19,8 +19,9 @@ export const signInUser = (username, password, successCbk, errorCbk) => {
   .catch(errorCbk);
 }
 
+
 /**
- * Users
+ * User
  */
 export const createUser = (username, password, successCbk, errorCbk) => {
   axiosInstance.post(nodeserverUrl + '/users',
@@ -34,54 +35,9 @@ export const createUser = (username, password, successCbk, errorCbk) => {
   .catch(errorCbk);
 }
 
-export const createGroup = (title, members, successCbk, errorCbk) => {
-  console.log('>>>> nodeserverapi.js is working')
-  axiosInstance.post(nodeserverUrl + '/groups',
-    {
-      access_token: masterKey,
-      title: title,
-      members: members
-    },
-  )
-  .then(successCbk)
-  .catch(errorCbk)
-}
-
-export const createMessage = (poster, group, content, successCbk, errorCbk) => {
-  console.log('nodeserverapi is being called')
-  axiosInstance.post(nodeserverUrl + '/messages',
-    {
-      access_token: masterKey,
-      poster: poster,
-      group: group,
-      content: content
-    }
-  )
-  .then(successCbk)
-  .catch(errorCbk)
-}
-
-// DISABLED SO THAT GETMEMBERS CAN RUN
-
-export const getAllUsers = (token, successCbk, errorCbk) => {
+export const getAllUser = (token, successCbk, errorCbk) => {
   axiosInstance.get(nodeserverUrl + '/users/',
     { headers: { Authorization: 'Bearer ' + token} }
-  )
-  .then(successCbk)
-  .catch(errorCbk)
-}
-
-export const getAllGroups = (token, user, successCbk, errorCbk) => {
-  axiosInstance.get(nodeserverUrl + '/groups?user=' + user,
-    { headers: { Authorization: 'Bearer ' + token } }
-  )
-  .then(successCbk)
-  .catch(errorCbk)
-}
-
-export const getMessages = (token, group, skipCount, successCbk, errorCbk) => {
-  axiosInstance.get(nodeserverUrl + '/messages?group=' + group + '&skipCount=' + skipCount,
-    { headers: { Authorization: 'Bearer ' + token } }
   )
   .then(successCbk)
   .catch(errorCbk)
@@ -95,29 +51,10 @@ export const getUser = (id, token, successCbk, errorCbk) => {
   .catch(errorCbk);
 }
 
-export const getMembers = (token, groupId, successCbk, errorCbk) => {
-  axiosInstance.get(nodeserverUrl + '/groups/' + groupId,
-    { headers: { Authorization: 'Bearer ' + token } }
-  )
-  .then(successCbk)
-  .catch(errorCbk)
-}
-
 export const updateUser = (id, token, email, successCbk, errorCbk) => {
   axiosInstance.put(nodeserverUrl + '/users/' + id,
     {
       email: email,
-      access_token: token
-    }
-  )
-  .then(successCbk)
-  .catch(errorCbk);
-}
-
-export const updateGroupsMembers = (id, token, members, successCbk, errorCbk) => {
-  axiosInstance.put(nodeserverUrl + '/groups/' + id,
-    {
-      members: members,
       access_token: token
     }
   )
@@ -132,4 +69,71 @@ export const deleteUser  = (id, token, successCbk, errorCbk) => {
   .then(successCbk)
   .catch(errorCbk);
 }
-  
+
+
+/**
+ * Group
+ */
+export const createGroup = (title, members, successCbk, errorCbk) => {
+  axiosInstance.post(nodeserverUrl + '/groups',
+    {
+      access_token: masterKey,
+      title: title,
+      members: members
+    },
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}
+
+export const getAllGroup = (token, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/groups',
+    { headers: { Authorization: 'Bearer ' + token } }
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}
+
+export const getGroup = (id, token, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/groups/' + id,
+    { headers: { Authorization: 'Bearer ' + token } }
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}
+
+export const updateMembersGroup = (id, token, members, successCbk, errorCbk) => {
+  axiosInstance.put(nodeserverUrl + '/groups/' + id,
+    {
+      members: members,
+      access_token: token
+    }
+  )
+  .then(successCbk)
+  .catch(errorCbk);
+}
+
+
+/**
+ * Message
+ */
+export const createMessage = (poster, group, content, successCbk, errorCbk) => {
+  axiosInstance.post(nodeserverUrl + '/messages',
+    {
+      access_token: masterKey,
+      poster: poster,
+      group: group,
+      content: content
+    }
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}
+
+export const getMessage = (token, group, skipCount, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/messages?group=' + group + '&skipCount=' + skipCount,
+    { headers: { Authorization: 'Bearer ' + token } }
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}    
