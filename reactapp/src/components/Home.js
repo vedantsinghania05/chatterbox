@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Container, Row, Card, CardBody, Button, Form } from 'reactstrap';
-import { createGroup, getAllUser, createMessage, getMessage, updateMembersGroup } from '../nodeserverapi'
+import { createGroup, getAllUser, createMessage, getMessage } from '../nodeserverapi'
 
 class Home extends Component {
   constructor() {
@@ -143,12 +143,14 @@ class Home extends Component {
     let newMembersList = [...group.members]
     newMembersList.push(userId)
 
+    /*
     updateMembersGroup(group.id , getUserToken(), newMembersList,
       response => {
       },
       error => {
       }
     )
+    */
   }
 
   postMsg = (e) => {
@@ -197,12 +199,14 @@ class Home extends Component {
       newMembersList.splice(signedInUserIndex-1, 1)
     }
 
+    /*
     updateMembersGroup(group.id, getUserToken(), newMembersList,
       response => {
       },
       error => {
       }  
     )
+    */
   }
 
   render() {

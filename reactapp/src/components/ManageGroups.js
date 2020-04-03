@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
+import { signedInUserMstp, signedInUserMdtp } from '../redux/containers/SignedInUserCtr';
 import { Col, Container, Row, Card, CardBody, Button } from 'reactstrap';
-import { getGroup } from '../nodeserverapi'
 
 class ManageGroups extends Component {
   constructor() {
@@ -11,12 +10,14 @@ class ManageGroups extends Component {
 	}
 	
 	componentDidMount = () => {
+    /*
 		getGroup(getUserToken(), this.props.location.state.groupId, 
 			response => {
 			},
 			error => {
 			}
-		)
+    )
+    */
 	}
 
   render() {

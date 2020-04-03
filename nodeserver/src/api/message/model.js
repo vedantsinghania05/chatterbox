@@ -45,14 +45,14 @@ export const populateManyPosters = (messages) => {
       if (!err && popmessage) {
         resolve(popmessage);
       } else {
-        reject(m); // return the unpopulated message
+        reject(m);
       }
     });
   })))
 
   let popmanymessages = [];
   return Promise.all(promises.map(p =>
-    p.catch((message) => { // we should get the original user here since that is what we returned above
+    p.catch((message) => {
       if (message) popmanymessages.push(message);
       return undefined;
     })

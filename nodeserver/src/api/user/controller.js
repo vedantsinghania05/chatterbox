@@ -15,8 +15,6 @@ const ObjectId = require('mongodb').ObjectID
 export const getMembers = ({ query }, res, next) => {
   let { members } = query
 
-  console.log('>>>>> MEMBERS', members)
-
   let memberIds = members.map(m => ObjectId(m))
   User.find({ _id: { $in: memberIds }})
   .then(users => {

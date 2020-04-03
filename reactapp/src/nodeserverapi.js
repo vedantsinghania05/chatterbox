@@ -86,33 +86,13 @@ export const createGroup = (title, members, successCbk, errorCbk) => {
   .catch(errorCbk)
 }
 
-export const getAllGroup = (token, successCbk, errorCbk) => {
-  axiosInstance.get(nodeserverUrl + '/groups',
+export const getGroupsForUser = (token, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/groups/user',
     { headers: { Authorization: 'Bearer ' + token } }
   )
   .then(successCbk)
   .catch(errorCbk)
 }
-
-export const getGroup = (id, token, successCbk, errorCbk) => {
-  axiosInstance.get(nodeserverUrl + '/groups/' + id,
-    { headers: { Authorization: 'Bearer ' + token } }
-  )
-  .then(successCbk)
-  .catch(errorCbk)
-}
-
-export const updateMembersGroup = (id, token, members, successCbk, errorCbk) => {
-  axiosInstance.put(nodeserverUrl + '/groups/' + id,
-    {
-      members: members,
-      access_token: token
-    }
-  )
-  .then(successCbk)
-  .catch(errorCbk);
-}
-
 
 /**
  * Message

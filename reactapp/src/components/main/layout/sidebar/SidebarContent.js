@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SidebarLink from './SidebarLink';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../../../../redux/containers/SignedInUserCtr';
-import { getAllGroup } from '../../../../nodeserverapi';
+import { getGroupsForUser } from '../../../../nodeserverapi';
 
 class SidebarContent extends Component {
   constructor() {
@@ -15,7 +15,7 @@ class SidebarContent extends Component {
   };
 
   componentDidMount = () => {
-    getAllGroup(getUserToken(),
+    getGroupsForUser(getUserToken(),
       response => {
         if (response.data) this.setState({ groupList: response.data })
       },
@@ -39,7 +39,7 @@ class SidebarContent extends Component {
         </ul>*/}
 
         {groupList.map((group, index) => 
-          <ul className="sidebar__block">
+          <ul key={index} className="sidebar__block">
             <SidebarLink key={index} title={group.title} to={{pathname:'/', state: {groupId: group}}} onClick={this.hideSidebar} />
 
             <div className="form__form-group">
