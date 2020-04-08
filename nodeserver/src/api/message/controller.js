@@ -18,6 +18,7 @@ export const create = ({ body }, res, next) => {
 
 export const getMessages = ({ query }, res, next) => {
   let { group, skipCount } = query
+
   skipCount = Number(skipCount)
 
   return Message.find({ group: group })
@@ -25,7 +26,6 @@ export const getMessages = ({ query }, res, next) => {
     .limit(10)
     .skip(skipCount)
     .then(messages => {
-      if (!messages) return next(resInternal('Failed to find messages'));
       return populateManyPosters(messages);
     })
     .then(messages => {

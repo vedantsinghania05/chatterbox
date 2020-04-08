@@ -1,16 +1,16 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { password as passwordAuth, master, token } from '../../services/passport'
-import { index, show, create, update, updatePassword, destroy, getMembers } from './controller'
+import { index, show, create, update, updatePassword, destroy, getGroupsUser } from './controller'
 import { schema } from './model'
 export User, { schema } from './model'
 
 const router = new Router()
 
-router.get('/',
+/*router.get('/',
   token({ required: true }),
   query(),
-  getMembers)
+  getGroupsUser)*/
 
 router.get('/:id',
   token({ required: true }),

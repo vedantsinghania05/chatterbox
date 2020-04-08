@@ -12,18 +12,6 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
 
 const ObjectId = require('mongodb').ObjectID
 
-export const getMembers = ({ query }, res, next) => {
-  let { members } = query
-
-  let memberIds = members.map(m => ObjectId(m))
-  User.find({ _id: { $in: memberIds }})
-  .then(users => {
-    if (!users) return next(resInternal('Failed to find users'))
-    return resOk(res, users.map(u => u.view()));
-  })
-  .catch(next)
-}
-
 export const show = ({ params, user }, res, next) => {
   User.findById(params.id === 'me' ? user.id : params.id)
     .then(user => {

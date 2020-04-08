@@ -37,7 +37,15 @@ export const createUser = (username, password, successCbk, errorCbk) => {
 
 export const getAllUser = (token, successCbk, errorCbk) => {
   axiosInstance.get(nodeserverUrl + '/users/',
-    { headers: { Authorization: 'Bearer ' + token} }
+    { headers: { Authorization: 'Bearer ' + token } }
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}
+
+export const getMember = (token, groupId, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/groups/' + groupId + '/members',
+    { headers: { Authorization: 'Bearer ' + token } }
   )
   .then(successCbk)
   .catch(errorCbk)
@@ -94,6 +102,14 @@ export const getGroupsForUser = (token, successCbk, errorCbk) => {
   .catch(errorCbk)
 }
 
+export const getGroupInfo = (token, groupId, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/groups/' + groupId,
+    { headers: { Authorization: 'Bearer ' + token } }
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}
+
 /**
  * Message
  */
@@ -110,7 +126,7 @@ export const createMessage = (poster, group, content, successCbk, errorCbk) => {
   .catch(errorCbk)
 }
 
-export const getMessage = (token, group, skipCount, successCbk, errorCbk) => {
+export const getMessages = (token, group, skipCount, successCbk, errorCbk) => {
   axiosInstance.get(nodeserverUrl + '/messages?group=' + group + '&skipCount=' + skipCount,
     { headers: { Authorization: 'Bearer ' + token } }
   )

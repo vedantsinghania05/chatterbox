@@ -9,7 +9,7 @@ export const create = ({ body }, res, next) => {
     .then(users => {
       if (!users) return next(resInternal('Failed to find users'));
 
-      field.members = users.map(u => u.id)
+      fields.members = users.map(u => u.id)
 
       return Group.create(fields)
     })
@@ -22,12 +22,37 @@ export const create = ({ body }, res, next) => {
 }
 
 export const getGroupsForUser = ({ user }, res, next) => {
-  
   Group.find({ members: user.id })
     .then(groups => {
       if (!groups) return next(resInternal('Failed to get groups for user'))
 
       return resOk(res, groups.map(g => g.view(true)))
+    })
+    .catch(next)
+}
+
+const ObjectId = require('mongodb').ObjectID
+
+export const getGroupMembers = ({ params }, res, next) => {
+  Group.findById(params.id)
+    .then(group => {
+      if (!group) return next(resInternal('Failed to find group'))
+
+      let memberIds = group.members ? group.members.map(m => ObjectId(m)) : []
+      return User.find({ _id: { $in: memberIds } })
+    })
+    .then(members => {
+      if (!members) return next(resInternal('Failed to find members'))
+      return resOk(res, members.map(m => m.view(true)))
+    })
+    .catch(next)
+}
+
+export const getGroupInfo = ({ params }, res, next) => {
+  Group.findById(params.id)
+    .then(group => {
+      if (!group) return next(resInternal('Failed to find group'))
+      return resOk(res, group.view(true))
     })
     .catch(next)
 }

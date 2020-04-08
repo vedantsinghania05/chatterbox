@@ -2,37 +2,46 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Container, Row, Card, CardBody, Button, Form } from 'reactstrap';
-import { createGroup, getAllUser, createMessage, getMessage } from '../nodeserverapi'
+import { createGroup, createMessage, getMessages, getGroupInfo } from '../nodeserverapi'
 
 class Home extends Component {
   constructor() {
     super();
-    this.state = { groupsInitUsers: '', groupList: [], showGroup: false, selectedGroup: undefined, newMemberUsername: '', groupTableIndex: undefined, newMessage: '', groupsMessages: [], pageNo: 1, sameId: undefined };
+    this.state = { groupsInitUsers: '', groupList: [], selectedGroup: undefined, newMemberUsername: '', newMessage: '', groupsMessages: [], pageNo: 1, sameId: undefined };
+  }
+
+  componentDidMount = () => {
+
+    if (this.props.location.state) {
+      const { groupId } = this.props.location.state
+      this.getGroup(groupId)
+      this.getGroupMessages(groupId, 0)
+    }
+
   }
 
   componentDidUpdate = (prevProps) => {
     const { location } = this.props
 
-    let newGroupInfo = location.state ? location.state.groupInfo : undefined
-    let oldGroupInfo = prevProps.location.state ? prevProps.location.state.groupInfo : undefined
+    let newGroupId = location.state ? location.state.groupId : undefined
+    let oldGroupId = prevProps.location.state ? prevProps.location.state.groupId : undefined
 
-    if (newGroupInfo && newGroupInfo!==oldGroupInfo) {
-      getMessage(getUserToken(), newGroupInfo.id, 0,
-        response => {
-          let tempGroupsMessages = []
-
-          for (let message of response.data) {    
-            message.poster = this.getUserNickname(message.poster.email)    
-            tempGroupsMessages.unshift(message)
-          }
-
-          this.setState({ groupsMessages: tempGroupsMessages, sameId: newGroupInfo.id, selectedGroup: newGroupInfo })
-        },
-        error => {
-        }
-      )
+    if (newGroupId && newGroupId!==oldGroupId) {
+      this.getGroup(newGroupId)
+      this.getGroupMessages(newGroupId, 0)
     }
   }
+
+  getGroup = (groupId) => {
+    getGroupInfo(getUserToken(), groupId,
+      response => {
+        this.setState({ selectedGroup: response.data })
+      },
+      error => {
+      }
+    )
+
+  } 
 
   onChangeGroupsInitUsers = (e) => {
     this.setState({ groupsInitUsers: e.target.value })
@@ -42,7 +51,7 @@ class Home extends Component {
     this.setState({ newMessage: e.target.value })
   }
 
-  createGroup = (e) => {
+  createNewGroup = (e) => {
     e.preventDefault()
 
     const { groupsInitUsers, groupList } = this.state;
@@ -68,13 +77,11 @@ class Home extends Component {
   }
 
   parseForUserEmails = (emailsString) => {
-    
     let emailsList = emailsString.split(/[ ,]+/)
 
     for (let email of emailsList) {
       email = email.trim()
     }
-
     return emailsList
   }
 
@@ -88,18 +95,15 @@ class Home extends Component {
       skipCount = pageNo * 10
     }
 
-    getMessage(getUserToken(), groupId, skipCount-10,
+    getMessages(getUserToken(), groupId, skipCount-10,
       response => {
-
+        
         let tempGroupsMessages = []
 
         for (let message of response.data) {
-        
           message.poster = this.getUserNickname(message.poster.email)    
-
           tempGroupsMessages.unshift(message)
         }
-
         this.setState({ groupsMessages: tempGroupsMessages, sameId: groupId })
       },
       error => {
@@ -121,22 +125,6 @@ class Home extends Component {
 
     this.getGroupMessages(sameId, newPageNo)
     this.setState({ pageNo: newPageNo })
-  }
-
-  checkValidUsername = (group) => {
-    const { newMemberUsername } = this.state;
-
-    getAllUser(getUserToken(),
-      response => {
-        for (let user of response.data) {
-          if (user.email === newMemberUsername) {
-            this.addMember(user.id, group)
-          }
-        }
-      },
-      error => {
-      }
-    )
   }
 
   addMember = (userId, group) => {
@@ -183,32 +171,6 @@ class Home extends Component {
     return strungCharacters
   }
 
-  leaveGroup = (group) => {
-    let newMembersList = group.members
-    let index = 1
-    let signedInUserIndex = -1
-
-    for (let memberId of newMembersList) {
-      if (memberId === this.props.userInfo.id) {
-        signedInUserIndex = index
-      }
-      index++
-    }
-
-    if (signedInUserIndex) {
-      newMembersList.splice(signedInUserIndex-1, 1)
-    }
-
-    /*
-    updateMembersGroup(group.id, getUserToken(), newMembersList,
-      response => {
-      },
-      error => {
-      }  
-    )
-    */
-  }
-
   render() {
     const { groupsInitUsers, newMessage, groupsMessages, selectedGroup } = this.state;
 
@@ -225,7 +187,7 @@ class Home extends Component {
             <Col md={12}>
               <Card>
                 <CardBody>
-                  <Form onSubmit={this.createGroup}>
+                  <Form onSubmit={this.createNewGroup}>
                     <input
                       name="groupsInitUsers"
                       placeholder="Enter users"
