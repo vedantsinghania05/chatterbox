@@ -56,3 +56,63 @@ export const getGroupInfo = ({ params }, res, next) => {
     })
     .catch(next)
 }
+
+export const updateGroupTitle = ({ params, body }, res, next) => {
+  Group.findById(params.id)
+    .then(group => {
+      if (!group) return next(resInternal('Failed to find group'))
+
+      if (body.title) group.title = body.title
+      return group.save()
+    })
+    .then(group => {
+      if (!group) return next(resInternal('Failed to update group'));
+      return resOk(res, group.view(true));
+    })
+    .catch(next)
+}
+
+export const updateGroupMembers = ({ params, body }, res, next) => {
+  let gGroup;
+
+  Group.findById(params.id)
+    .then(group => {
+      if (!group) return next(resInternal('Failed to find group'))
+
+      if (body.shouldAdd) {
+
+        gGroup = group
+        return User.findOne({ email: body.userEmail })
+
+      } else {
+        let i = 0
+        for (let memberId of group.members) {
+          if (memberId === body.userEmail) {
+            group.members.splice(i, 1)
+          }
+          i++
+        }
+        return group.save()
+      }
+    })
+    .then(user => {
+
+      if (body.shouldAdd) {
+
+        let groupMembers = gGroup.members ? gGroup.members.map(m => ObjectId(m)) : []
+
+        groupMembers.push(user.id)
+
+        gGroup.members = groupMembers
+        return gGroup.save()
+
+      } else {
+        return user
+      }
+    })
+    .then(group => {
+      if (!group) return next(resInternal('Failed to update group'))
+      return resOk(res, group.view(true))
+    })
+    .catch(next)
+}

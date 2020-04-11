@@ -60,10 +60,18 @@ class Home extends Component {
     emailsToAdd.unshift(this.props.userInfo.email)
 
     let groupsDefaultTitle = ''
+    let emailNo = 1
 
     for (let email of emailsToAdd) {
       let nickname = this.getUserNickname(email)
-      groupsDefaultTitle = groupsDefaultTitle + nickname + ', '
+
+      if (emailNo < emailsToAdd.length) {
+        groupsDefaultTitle = groupsDefaultTitle + nickname + ', '
+      } else {
+        groupsDefaultTitle = groupsDefaultTitle + nickname
+      }
+      
+      emailNo++
     }
 
     createGroup(groupsDefaultTitle, emailsToAdd,

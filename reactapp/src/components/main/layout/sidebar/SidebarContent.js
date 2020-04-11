@@ -44,7 +44,7 @@ class SidebarContent extends Component {
 
             <div className="form__form-group">
               <div className="form__form-group-field">
-                <SidebarLink key={index} title={'manage ' + group.title} to={{pathname:'/manage', state: {groupId: group.id}}} onClick={this.hideSidebar} />
+                <SidebarLink key={index} title={'manage: ' + group.title} to={{pathname:'/manage', state: {groupId: group.id}}} onClick={this.hideSidebar} />
               </div>
             </div>
           </ul>

@@ -110,6 +110,29 @@ export const getGroupInfo = (token, groupId, successCbk, errorCbk) => {
   .catch(errorCbk)
 }
 
+export const updateTitleGroup = (token, groupId, title, successCbk, errorCbk) => {
+  axiosInstance.put(nodeserverUrl + '/groups/' + groupId + '/title',
+    {
+      access_token: token,
+      title: title,
+    }
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}
+
+export const updateMembersGroup = (token, groupId, shouldAdd, userEmail, successCbk, errorCbk) => {
+  axiosInstance.put(nodeserverUrl + '/groups/' + groupId + '/addMembers',
+    {
+      access_token: token,
+      shouldAdd: shouldAdd,
+      userEmail: userEmail
+    }
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}
+
 /**
  * Message
  */

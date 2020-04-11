@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
-import { Col, Container, Row, Card, CardBody, Button } from 'reactstrap';
-import { getGroupInfo, getMember } from '../nodeserverapi'
+import { Col, Container, Row, Card, CardBody, Button, Form } from 'reactstrap';
+import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup } from '../nodeserverapi'
 
 class ManageGroups extends Component {
   constructor() {
     super();
-    this.state = { groupsMembers: [], groupInfo: undefined };
+    this.state = { groupsMembers: [], groupInfo: undefined, newMember: '', newGroupTitle: '' };
 	}
 	
 	componentDidMount = () => {
@@ -16,18 +16,38 @@ class ManageGroups extends Component {
       response => {
         let groupInfo = response.data
         this.getMembers(groupInfo.id)
-        this.setState({ groupInfo: groupInfo })
+        this.setState({ groupInfo: groupInfo, newGroupTitle: groupInfo.title })
       },
       error => {
       }
     )
 
   }
+
+  onChangeNewMember = (e) => {
+    this.setState({ newMember: e.target.value })
+  }
+  
+  onChangeNewGroupTitle = (e) => {
+    this.setState({ newGroupTitle: e.target.value })
+  }
+
+  addMembers = (e) => {
+    e.preventDefault()
+    const { groupInfo, newMember } = this.state;
+
+    updateMembersGroup(getUserToken(), groupInfo.id, true, newMember,
+      response => {
+        this.setState({ groupInfo: response.data })
+      },
+      error => {
+      }
+    )
+  }
   
   getMembers = (groupId) => {
     getMember(getUserToken(), groupId,
       response => {
-        console.log('YAY!: ', response.data)
         this.setState({ groupsMembers: response.data })
       },
       error => {
@@ -35,21 +55,53 @@ class ManageGroups extends Component {
     )
   }
 
+  updateGroupTitle = (e) => {
+    e.preventDefault()
+    const { newGroupTitle, groupInfo } = this.state;
+
+    updateTitleGroup(getUserToken(), groupInfo.id, newGroupTitle,
+      response => {
+        this.setState({ groupInfo: response.data })
+      },
+      error => {
+      }
+    )
+  }
+
   render() {
-		const { groupsMembers, groupInfo } = this.state;
+		const { groupsMembers, newMember, newGroupTitle } = this.state;
 
     return (
       <Container className="dashboard">
         <Row>
           <Col md={12}>
             <br></br>
-            <h3 className="page-title">{groupInfo && groupInfo.title}</h3>
+            <Form onSubmit={this.updateGroupTitle}>
+              <input
+                name="newGroupTitle"
+                value={newGroupTitle}
+                onChange={this.onChangeNewGroupTitle}
+              />                    
+            </Form>
+            <br></br>
           </Col>
         </Row>
         <Row>
           <Col md={12}>
             <Card>
               <CardBody>
+
+                <Form onSubmit={this.addMembers}>
+                  <input
+                    name="newMember"
+                    placeholder="enter usernames"
+                    value={newMember}
+                    onChange={this.onChangeNewMember}
+                  />                    
+                </Form>
+
+                <hr></hr>
+
                 <table>
                   <tbody>
                     {groupsMembers.map((member, index) => <tr key={index}>
