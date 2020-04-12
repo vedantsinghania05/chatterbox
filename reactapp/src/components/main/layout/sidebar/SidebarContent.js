@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SidebarLink from './SidebarLink';
 import { connect } from 'react-redux';
-import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../../../../redux/containers/SignedInUserCtr';
-import { getGroupsForUser } from '../../../../nodeserverapi';
+import { signedInUserMstp, signedInUserMdtp } from '../../../../redux/containers/SignedInUserCtr';
 
 class SidebarContent extends Component {
   constructor() {
@@ -15,13 +14,7 @@ class SidebarContent extends Component {
   };
 
   componentDidMount = () => {
-    getGroupsForUser(getUserToken(),
-      response => {
-        if (response.data) this.setState({ groupList: response.data })
-      },
-      error => {
-      }
-    )
+    this.setState({ groupList: this.props.userInfo.groups })
   }
 
   hideSidebar = () => {

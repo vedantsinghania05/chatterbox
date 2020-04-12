@@ -24,6 +24,25 @@ class ManageGroups extends Component {
 
   }
 
+  componentDidUpdate = (prevProps) => {
+    const { location } = this.props
+
+    let newGroupId = location.state ? location.state.groupId : undefined
+    let oldGroupId = prevProps.location.state ? prevProps.location.state.groupId : undefined
+
+    if (newGroupId && newGroupId!==oldGroupId) {
+      getGroupInfo(getUserToken(), this.props.location.state.groupId,
+        response => {
+          let groupInfo = response.data
+          this.getMembers(groupInfo.id)
+          this.setState({ groupInfo: groupInfo, newGroupTitle: groupInfo.title })
+        },
+        error => {
+        }
+      )
+    }
+  }
+
   onChangeNewMember = (e) => {
     this.setState({ newMember: e.target.value })
   }
@@ -38,6 +57,20 @@ class ManageGroups extends Component {
 
     updateMembersGroup(getUserToken(), groupInfo.id, true, newMember,
       response => {
+        this.getMembers(groupInfo.id)
+        this.setState({ groupInfo: response.data, newMember: '' })
+      },
+      error => {
+      }
+    )
+  }
+
+  deleteGroupMember = (member, i) => {
+    const { groupInfo } = this.state;
+
+    updateMembersGroup(getUserToken(), groupInfo.id, false, member.id,
+      response => {
+        this.getMembers(groupInfo.id)
         this.setState({ groupInfo: response.data })
       },
       error => {
@@ -105,7 +138,7 @@ class ManageGroups extends Component {
                 <table>
                   <tbody>
                     {groupsMembers.map((member, index) => <tr key={index}>
-                      <td><Button>x</Button></td>
+                      <td><Button onClick={()=>this.deleteGroupMember(member, index)}>x</Button></td>
                       <td>{member.email}</td>
                     </tr>)}
                   </tbody>	

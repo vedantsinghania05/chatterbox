@@ -1,5 +1,6 @@
 import { resInternal, resOk, resNotFound, resNoContent, resCreated } from '../../services/response/'
 import { User } from '.'
+import { Group } from '../group'
 import { sign } from '../../services/jwt'
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
@@ -16,7 +17,15 @@ export const show = ({ params, user }, res, next) => {
   User.findById(params.id === 'me' ? user.id : params.id)
     .then(user => {
       if (!user) return next(resNotFound('Failed to find user'));
-      return resOk(res, user.view(true));
+
+      return Group.find()
+    })
+    .then(groups => {
+
+      let info = user.view(true)
+      info.groups = groups
+
+      return resOk(res, info);
     })
     .catch(next)
   }

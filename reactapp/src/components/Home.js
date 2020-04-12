@@ -12,6 +12,8 @@ class Home extends Component {
 
   componentDidMount = () => {
 
+    console.log(this.props.userInfo)
+
     if (this.props.location.state) {
       const { groupId } = this.props.location.state
       this.getGroup(groupId)

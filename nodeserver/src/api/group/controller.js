@@ -87,7 +87,7 @@ export const updateGroupMembers = ({ params, body }, res, next) => {
       } else {
         let i = 0
         for (let memberId of group.members) {
-          if (memberId === body.userEmail) {
+          if (memberId === body.userEmail) { 
             group.members.splice(i, 1)
           }
           i++
@@ -98,14 +98,11 @@ export const updateGroupMembers = ({ params, body }, res, next) => {
     .then(user => {
 
       if (body.shouldAdd) {
-
         let groupMembers = gGroup.members ? gGroup.members.map(m => ObjectId(m)) : []
-
         groupMembers.push(user.id)
-
         gGroup.members = groupMembers
-        return gGroup.save()
 
+        return gGroup.save()
       } else {
         return user
       }
