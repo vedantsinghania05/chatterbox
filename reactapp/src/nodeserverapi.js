@@ -78,16 +78,16 @@ export const deleteUser  = (id, token, successCbk, errorCbk) => {
   .catch(errorCbk);
 }
 
-
 /**
  * Group
  */
-export const createGroup = (title, members, successCbk, errorCbk) => {
+export const createGroup = (title, members, creator, successCbk, errorCbk) => {
   axiosInstance.post(nodeserverUrl + '/groups',
     {
       access_token: masterKey,
       title: title,
-      members: members
+      members: members,
+      creator: creator
     },
   )
   .then(successCbk)

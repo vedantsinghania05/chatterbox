@@ -54,7 +54,6 @@ class ManageGroups extends Component {
   addMembers = (e) => {
     e.preventDefault()
     const { groupInfo, newMember } = this.state;
-
     updateMembersGroup(getUserToken(), groupInfo.id, true, newMember,
       response => {
         this.getMembers(groupInfo.id)
@@ -67,7 +66,6 @@ class ManageGroups extends Component {
 
   deleteGroupMember = (member, i) => {
     const { groupInfo } = this.state;
-
     updateMembersGroup(getUserToken(), groupInfo.id, false, member.id,
       response => {
         this.getMembers(groupInfo.id)
@@ -91,7 +89,6 @@ class ManageGroups extends Component {
   updateGroupTitle = (e) => {
     e.preventDefault()
     const { newGroupTitle, groupInfo } = this.state;
-
     updateTitleGroup(getUserToken(), groupInfo.id, newGroupTitle,
       response => {
         this.setState({ groupInfo: response.data })

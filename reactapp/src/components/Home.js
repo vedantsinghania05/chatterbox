@@ -74,7 +74,7 @@ class Home extends Component {
       emailNo++
     }
 
-    createGroup(groupsDefaultTitle, emailsToAdd,
+    createGroup(groupsDefaultTitle, emailsToAdd, this.props.userInfo.id,
       response => {
         groupList.push(response.data)
         this.setState({ groupsInitUsers: '' })
@@ -86,7 +86,6 @@ class Home extends Component {
           error => {
           }
         )
-
       },
       error => {
       }

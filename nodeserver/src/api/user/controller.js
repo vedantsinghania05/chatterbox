@@ -30,7 +30,7 @@ export const show = ({ params, user }, res, next) => {
   }
 
 export const create = ({ body }, res, next) => {
-  let fields = { email: body.email, password: body.password };
+  let fields = { email: body.email, password: body.password, creator: body.creator };
 
   let gUser = undefined;
   return User.create(fields)
