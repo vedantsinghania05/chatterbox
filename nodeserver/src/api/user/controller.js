@@ -18,14 +18,13 @@ export const show = ({ params, user }, res, next) => {
     .then(user => {
       if (!user) return next(resNotFound('Failed to find user'));
 
-      return Group.find()
+      return Group.find({ members: user._id })
     })
     .then(groups => {
+      let response = user.view(true)
+      response.groups = groups
 
-      let info = user.view(true)
-      info.groups = groups
-
-      return resOk(res, info);
+      return resOk(res, response);
     })
     .catch(next)
   }

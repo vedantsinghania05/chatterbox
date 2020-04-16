@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
-import { Col, Container, Row, Card, CardBody, Button, Form } from 'reactstrap';
-import { createGroup, createMessage, getMessages, getGroupInfo } from '../nodeserverapi'
+import { Col, Row, Card, CardBody, Button, Form } from 'reactstrap';
+import { createGroup, createMessage, getMessages, getGroupInfo, getUser } from '../nodeserverapi'
 
 class Home extends Component {
   constructor() {
@@ -11,8 +11,6 @@ class Home extends Component {
   }
 
   componentDidMount = () => {
-
-    console.log(this.props.userInfo)
 
     if (this.props.location.state) {
       const { groupId } = this.props.location.state
@@ -78,8 +76,17 @@ class Home extends Component {
 
     createGroup(groupsDefaultTitle, emailsToAdd,
       response => {
-          groupList.push(response.data)
-          this.setState({ groupsInitUsers: '' })
+        groupList.push(response.data)
+        this.setState({ groupsInitUsers: '' })
+
+        getUser(this.props.userInfo.id, getUserToken(),
+          response => {
+            this.props.setUserInfo(response.data)
+          },
+          error => {
+          }
+        )
+
       },
       error => {
       }
@@ -137,20 +144,6 @@ class Home extends Component {
     this.setState({ pageNo: newPageNo })
   }
 
-  addMember = (userId, group) => {
-    let newMembersList = [...group.members]
-    newMembersList.push(userId)
-
-    /*
-    updateMembersGroup(group.id , getUserToken(), newMembersList,
-      response => {
-      },
-      error => {
-      }
-    )
-    */
-  }
-
   postMsg = (e) => {
     e.preventDefault()
 
@@ -185,13 +178,9 @@ class Home extends Component {
     const { groupsInitUsers, newMessage, groupsMessages, selectedGroup } = this.state;
 
     return (
-        <Container className="dashboard">
-          <Row>
-            <Col md={12}>
-              <br></br>
-              <h3 className="page-title">{selectedGroup ? selectedGroup.title : 'Home'}</h3>
-            </Col>
-          </Row>
+      <span>
+
+          <h3 className="page-title">{selectedGroup ? selectedGroup.title : 'Home'}</h3>
 
           <Row>
             <Col md={12}>
@@ -208,8 +197,8 @@ class Home extends Component {
 
                   <hr></hr>
 
-                  <Button size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>
-                  <Button size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>
+                  <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>
+                  <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>
 
                   <table>
                     <tbody>
@@ -235,7 +224,9 @@ class Home extends Component {
               </Card>
             </Col>
           </Row>
-        </Container>    
+
+      </span>
+
     );
   }
 }

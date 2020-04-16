@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Container, Row, Card, CardBody, Button, Form } from 'reactstrap';
-import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup } from '../nodeserverapi'
+import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup, getUser } from '../nodeserverapi'
 
 class ManageGroups extends Component {
   constructor() {
@@ -95,6 +95,14 @@ class ManageGroups extends Component {
     updateTitleGroup(getUserToken(), groupInfo.id, newGroupTitle,
       response => {
         this.setState({ groupInfo: response.data })
+        
+        getUser(this.props.userInfo.id, getUserToken(),
+        response => {
+          this.props.setUserInfo(response.data)
+        },
+        error => {
+        }
+      )
       },
       error => {
       }
