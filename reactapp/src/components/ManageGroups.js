@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Container, Row, Card, CardBody, Button, Form } from 'reactstrap';
 import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup, getUser, deleteGroup } from '../nodeserverapi'
-
+import { Link } from 'react-router-dom'
 class ManageGroups extends Component {
   constructor() {
     super();
@@ -165,7 +165,7 @@ class ManageGroups extends Component {
                     </tr>)}
                   </tbody>	
                 </table>	
-                <Button onClick={this.removeGroup}>Delete Group</Button>
+                <Link to='/' onClick={this.removeGroup}>Delete Group</Link>
               </CardBody>
             </Card>
           </Col>
