@@ -150,13 +150,13 @@ class Home extends Component {
     const { selectedGroup, newMessage } = this.state;
 
     createMessage(this.props.userInfo.id, selectedGroup.id, newMessage,
-        response => {
-          this.getGroupMessages(selectedGroup.id, 0)
-          this.setState({ newMessage: '' })     
-        },
-        error => {
-        }
-      ) 
+      response => {
+        this.getGroupMessages(selectedGroup.id, 0)
+        this.setState({ newMessage: '' })     
+      },
+      error => {
+      }
+    ) 
   }
 
   getUserNickname = (username) => {

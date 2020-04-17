@@ -9,7 +9,7 @@ import KeyVariantIcon from 'mdi-react/KeyVariantIcon';
 import AccountOutlineIcon from 'mdi-react/AccountOutlineIcon';
 //import FacebookIcon from 'mdi-react/FacebookIcon';
 //import GooglePlusIcon from 'mdi-react/GooglePlusIcon';
-import { signInUser } from '../nodeserverapi';
+import { signInUser, getUser } from '../nodeserverapi';
 
 class SignIn extends Component {
   constructor() {
@@ -35,8 +35,16 @@ class SignIn extends Component {
 
     signInUser(email, password,
       response => {
-        this.props.setUserInfo(response.data.user);
         this.props.setUserToken(response.data.token);
+        let tempUserInfo = response.data
+
+        getUser(tempUserInfo.user.id, response.data.token,
+          response => {
+            this.props.setUserInfo(response.data)
+          },
+          error => {
+          }
+        )
       },
       error => {
         this.setState({ result: error.message });
