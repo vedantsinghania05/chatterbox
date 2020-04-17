@@ -4,6 +4,7 @@ import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/conta
 import { Col, Container, Row, Card, CardBody, Button, Form } from 'reactstrap';
 import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup, getUser, deleteGroup } from '../nodeserverapi'
 import { Link } from 'react-router-dom'
+
 class ManageGroups extends Component {
   constructor() {
     super();
