@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { password as passwordAuth, master, token } from '../../services/passport'
-import { show, create, update, updatePassword, destroy, getUserByEmail } from './controller'
+import { show, create, update, updatePassword, destroy, getUserByEmail, setCreator } from './controller'
 import { schema } from './model'
 export User, { schema } from './model'
 

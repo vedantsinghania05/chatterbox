@@ -9,7 +9,12 @@ const groupSchema = new Schema({
     },
     members: [{
         type: String
-    }]
+    }],
+    creator: {
+      type: Schema.ObjectId,
+      ref: 'Creator',
+      index: true
+    }
 
 }, {
   timestamps: true

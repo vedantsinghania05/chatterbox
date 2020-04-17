@@ -3,7 +3,7 @@ import { Group } from '.'
 import { User } from '../user'
 
 export const create = ({ body }, res, next) => {
-  let fields = { title: body.title, members: body.members };
+  let fields = { title: body.title, members: body.members, creator: body.creator };
 
   User.find({ email: { $in: fields.members }})
     .then(users => {
