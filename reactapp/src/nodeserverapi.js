@@ -133,6 +133,13 @@ export const updateMembersGroup = (token, groupId, shouldAdd, userEmail, success
   .catch(errorCbk)
 }
 
+export const deleteGroup = (token, groupId, successCbk, errorCbk) => {
+  axiosInstance.delete(nodeserverUrl + '/groups/' + groupId,
+    { headers: { Authorization: 'Bearer ' + token } }
+  )
+  .then(successCbk)
+  .catch(errorCbk);
+}
 /**
  * Message
  */

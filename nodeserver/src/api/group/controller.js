@@ -1,4 +1,4 @@
-import { resInternal, resCreated, resOk } from '../../services/response/'
+import { resInternal, resCreated, resOk, resNoContent } from '../../services/response/'
 import { Group } from '.'
 import { User } from '../user'
 
@@ -110,6 +110,19 @@ export const updateGroupMembers = ({ params, body }, res, next) => {
     .then(group => {
       if (!group) return next(resInternal('Failed to update group'))
       return resOk(res, group.view(true))
+    })
+    .catch(next)
+}
+
+export const destroy = ({ params }, res, next) => {
+  Group.findById(params.id)
+    .then(group => {
+      if (!group) return next(resInternal('Failed to find group'));
+      return group.remove();
+    })
+    .then(group => {
+      if (!group) return next(resInternal('Failed to delete group'));
+      return resNoContent(res, group.view(false))
     })
     .catch(next)
 }
