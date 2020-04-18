@@ -179,7 +179,7 @@ class Home extends Component {
     e.preventDefault()
     const { userInfo } = this.props;
     const { selectedGroup } = this.state;
-
+    if (selectedGroup.creator !== userInfo.id) {
     updateMembersGroup(getUserToken(), selectedGroup.id, false, userInfo.email,
       response => {
         getUser(this.props.userInfo.id, getUserToken(),
@@ -194,6 +194,7 @@ class Home extends Component {
       error => {
       }
     )
+    }
   }
 
   render() {
