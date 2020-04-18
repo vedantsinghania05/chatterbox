@@ -16,6 +16,7 @@ class Home extends Component {
       const { groupId } = this.props.location.state
       this.getGroup(groupId)
       this.getGroupMessages(groupId, 0)
+      this.setState({onHomePage: this.props.location.backToGroup})
     }
 
   }
@@ -211,7 +212,7 @@ class Home extends Component {
                   <Form onSubmit={this.createNewGroup}>
                     <input
                       name="groupsInitUsers"
-                      placeholder="Enter users"
+                      placeholder="enter user(s)"
                       value={groupsInitUsers}
                       onChange={this.onChangeGroupsInitUsers}
                     />

@@ -49,7 +49,7 @@ class SidebarContent extends Component {
 
         {groupList.map((group, index) => 
           <ul key={index} className="sidebar__block">
-            <SidebarLink key={index} title={group.title} to={{pathname:'/', state: {groupId: group._id}}} onClick={this.hideSidebar} />
+            <SidebarLink key={index} title={group.title} to={{pathname:'/', state: {groupId: group._id}, backtoGroup: false}} onClick={this.hideSidebar} />
 
             <div className="form__form-group">
               <div className="form__form-group-field">
