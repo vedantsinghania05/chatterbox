@@ -184,6 +184,7 @@ class Home extends Component {
         getUser(this.props.userInfo.id, getUserToken(),
           response => {
             this.props.setUserInfo(response.data)
+            this.setState({selectedGroup: undefined, onHomePage: true})
           },
           error => {
           }
@@ -201,7 +202,7 @@ class Home extends Component {
       <span>
 
           <h3 className="page-title">{selectedGroup ? selectedGroup.title : 'Home'}</h3>
-          {!onHomePage && <Button color='primary' size='sm' onClick={this.leaveGroup}>x</Button>}
+          {!onHomePage && <Button color='primary' size='sm' onClick={this.leaveGroup}>Leave Group</Button>}
 
           <Row>
             <Col md={12}>
