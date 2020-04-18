@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Row, Card, CardBody, Button, Form } from 'reactstrap';
-import { createGroup, createMessage, getMessages, getGroupInfo, getUser } from '../nodeserverapi'
+import { createGroup, createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup } from '../nodeserverapi'
 
 class Home extends Component {
   constructor() {
@@ -173,6 +173,26 @@ class Home extends Component {
     return strungCharacters
   }
 
+  leaveGroup = (e) => {
+    e.preventDefault()
+    const { userInfo } = this.props;
+    const { selectedGroup } = this.state;
+
+    updateMembersGroup(getUserToken(), selectedGroup.id, false, userInfo.email,
+      response => {
+        getUser(this.props.userInfo.id, getUserToken(),
+          response => {
+            this.props.setUserInfo(response.data)
+          },
+          error => {
+          }
+        )
+      },
+      error => {
+      }
+    )
+  }
+
   render() {
     const { groupsInitUsers, newMessage, groupsMessages, selectedGroup } = this.state;
 
@@ -180,6 +200,7 @@ class Home extends Component {
       <span>
 
           <h3 className="page-title">{selectedGroup ? selectedGroup.title : 'Home'}</h3>
+          <Button onClick={this.leaveGroup}>x</Button>
 
           <Row>
             <Col md={12}>

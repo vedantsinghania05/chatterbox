@@ -79,21 +79,9 @@ export const updateGroupMembers = ({ params, body }, res, next) => {
     .then(group => {
       if (!group) return next(resInternal('Failed to find group'))
 
-      if (body.shouldAdd) {
+      gGroup = group
+      return User.findOne({ email: body.userEmail })
 
-        gGroup = group
-        return User.findOne({ email: body.userEmail })
-
-      } else {
-        let i = 0
-        for (let memberId of group.members) {
-          if (memberId === body.userEmail) { 
-            group.members.splice(i, 1)
-          }
-          i++
-        }
-        return group.save()
-      }
     })
     .then(user => {
 
@@ -104,7 +92,15 @@ export const updateGroupMembers = ({ params, body }, res, next) => {
 
         return gGroup.save()
       } else {
-        return user
+
+        let i = 0
+        for (let memberId of gGroup.members) {
+          if (user._id.equals(memberId)) {
+            gGroup.members.splice(i, 1)
+          }
+          i++
+        }
+        return gGroup.save()
       }
     })
     .then(group => {
