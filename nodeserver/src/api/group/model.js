@@ -27,6 +27,7 @@ groupSchema.methods = {
     view.id = this.id
     view.title = this.title;
     view.members = this.members;
+    view.creator = this.creator;
  
     if (full) {
       view.createdAt = this.createdAt;

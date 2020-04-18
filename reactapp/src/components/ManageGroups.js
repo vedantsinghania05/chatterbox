@@ -68,14 +68,17 @@ class ManageGroups extends Component {
 
   deleteGroupMember = (member, i) => {
     const { groupInfo } = this.state;
-    updateMembersGroup(getUserToken(), groupInfo.id, false, member.email,
-      response => {
-        this.getMembers(groupInfo.id)
-        this.setState({ groupInfo: response.data })
-      },
-      error => {
-      }
-    )
+
+    if (groupInfo.creator !== member.id) {
+      updateMembersGroup(getUserToken(), groupInfo.id, false, member.email,
+        response => {
+          this.getMembers(groupInfo.id)
+          this.setState({ groupInfo: response.data })
+        },
+        error => {
+        }
+      )
+    }
   }
   
   getMembers = (groupId) => {
