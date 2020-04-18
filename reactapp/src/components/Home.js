@@ -7,7 +7,7 @@ import { createGroup, createMessage, getMessages, getGroupInfo, getUser, updateM
 class Home extends Component {
   constructor() {
     super();
-    this.state = { groupsInitUsers: '', groupList: [], selectedGroup: undefined, newMemberUsername: '', newMessage: '', groupsMessages: [], pageNo: 1, sameId: undefined };
+    this.state = { onHomePage: true, groupsInitUsers: '', groupList: [], selectedGroup: undefined, newMemberUsername: '', newMessage: '', groupsMessages: [], pageNo: 1, sameId: undefined };
   }
 
   componentDidMount = () => {
@@ -29,6 +29,7 @@ class Home extends Component {
     if (newGroupId && newGroupId!==oldGroupId) {
       this.getGroup(newGroupId)
       this.getGroupMessages(newGroupId, 0)
+      this.setState({ onHomePage: false })
     }
   }
 
@@ -194,13 +195,13 @@ class Home extends Component {
   }
 
   render() {
-    const { groupsInitUsers, newMessage, groupsMessages, selectedGroup } = this.state;
+    const { groupsInitUsers, onHomePage, newMessage, groupsMessages, selectedGroup } = this.state;
 
     return (
       <span>
 
           <h3 className="page-title">{selectedGroup ? selectedGroup.title : 'Home'}</h3>
-          <Button onClick={this.leaveGroup}>x</Button>
+          {!onHomePage && <Button color='primary' size='sm' onClick={this.leaveGroup}>x</Button>}
 
           <Row>
             <Col md={12}>
