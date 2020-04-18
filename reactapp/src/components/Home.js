@@ -217,31 +217,36 @@ class Home extends Component {
                     />
                   </Form>
 
-                  <hr></hr>
+                  {!onHomePage && <span>
 
-                  <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>
-                  <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>
+                    <hr></hr>
+                    
+                    <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>
+                    <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>
 
-                  <table>
-                    <tbody>
-                      {groupsMessages.map((message, index) => <tr key={index}>
-                        <td>{message.poster + '-'}</td>
-                        <td><br></br></td>
-                        <td>{message.content}</td>
-                      </tr>)}
-                    </tbody>
-                  </table> 
+                    <table>
+                      <tbody>
+                        {groupsMessages.map((message, index) => <tr key={index}>
+                          <td>{message.poster + '-'}</td>
+                          <td><br></br></td>
+                          <td>{message.content}</td>
+                        </tr>)}
+                      </tbody>
+                    </table> 
 
-                  <hr></hr>
+                    <hr></hr>
 
-                  <Form onSubmit={this.postMsg}>
-                    <input
-                      name="newMessage"
-                      placeholder="enter message"
-                      value={newMessage}
-                      onChange={this.onChangeNewMessage}
-                    />                    
-                  </Form>
+                    <Form onSubmit={this.postMsg}>
+                      <input
+                        name="newMessage"
+                        placeholder="enter message"
+                        value={newMessage}
+                        onChange={this.onChangeNewMessage}
+                      />                    
+                    </Form>
+                    
+                  </span>}
+
                 </CardBody>
               </Card>
             </Col>
