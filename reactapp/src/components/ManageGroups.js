@@ -69,7 +69,6 @@ class ManageGroups extends Component {
   deleteGroupMember = (member, i) => {
     const { groupInfo } = this.state;
 
-    if (groupInfo.creator !== member.id) {
       updateMembersGroup(getUserToken(), groupInfo.id, false, member.email,
         response => {
           this.getMembers(groupInfo.id)
@@ -78,7 +77,6 @@ class ManageGroups extends Component {
         error => {
         }
       )
-    }
   }
   
   getMembers = (groupId) => {
@@ -129,7 +127,7 @@ class ManageGroups extends Component {
   }
 
   render() {
-		const { groupsMembers, newMember, newGroupTitle } = this.state;
+		const { groupsMembers, newMember, newGroupTitle, groupInfo } = this.state;
 
     return (
       <Container className="dashboard">
@@ -165,7 +163,7 @@ class ManageGroups extends Component {
                 <table>
                   <tbody>
                     {groupsMembers.map((member, index) => <tr key={index}>
-                      <td><Button onClick={()=>this.deleteGroupMember(member, index)}>x</Button></td>
+                      <td>{groupInfo.creator !== member.id ? <Button onClick={()=>this.deleteGroupMember(member, index)}>x</Button>: <Button disabled>X</Button>}</td>
                       <td>{member.email}</td>
                     </tr>)}
                   </tbody>	
