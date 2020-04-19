@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { master, token } from '../../services/passport'
-import { getMessages, create } from './controller'
+import { getMessages, create, deleteGroupsMessages } from './controller'
 import { schema } from './model'
 export Message, { schema } from './model'
 
@@ -13,5 +13,9 @@ router.post('/',
 router.get('/',
   token({ required: true }),
   getMessages)
+
+router.delete('/:id',
+  token({ required: true }),
+  deleteGroupsMessages)
 
 export default router

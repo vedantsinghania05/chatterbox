@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Container, Row, Card, CardBody, Button, Form } from 'reactstrap';
-import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup, getUser, deleteGroup } from '../nodeserverapi'
+import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup, getUser, deleteGroup, deleteGroupsMessage } from '../nodeserverapi'
 import { Link } from 'react-router-dom'
 
 
@@ -115,6 +115,7 @@ class ManageGroups extends Component {
     const { groupInfo } = this.state
     deleteGroup(getUserToken(), groupInfo.id,
       response => {
+        this.removeGroupsMessages()
         getUser(this.props.userInfo.id, getUserToken(),
           response => {
             this.props.setUserInfo(response.data)
@@ -126,6 +127,18 @@ class ManageGroups extends Component {
       error => {
       }
     )
+  }
+
+  removeGroupsMessages = () => {
+    const { groupInfo } = this.state;
+    
+    deleteGroupsMessage(getUserToken(), groupInfo.id,
+      response => {
+      },
+      error => {
+      }
+    )
+
   }
 
   render() {

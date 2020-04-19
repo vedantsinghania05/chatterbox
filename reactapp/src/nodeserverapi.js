@@ -162,4 +162,12 @@ export const getMessages = (token, group, skipCount, successCbk, errorCbk) => {
   )
   .then(successCbk)
   .catch(errorCbk)
-}    
+}
+
+export const deleteGroupsMessage = (token, groupId, successCbk, errorCbk) => {
+  axiosInstance.delete(nodeserverUrl + '/messages/' + groupId,
+    { headers: { Authorization: 'Bearer ' + token } }
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}

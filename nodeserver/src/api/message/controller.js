@@ -34,3 +34,12 @@ export const getMessages = ({ query }, res, next) => {
     })
     .catch(next)
 }
+
+export const deleteGroupsMessages = ({ params }, res, next) => {
+  Message.deleteMany({ group: params.id })
+    .then(messages => {
+      if (!messages) return next(resInternal('Failed to delete messages'))
+      return resNoContent(res)
+    })
+    .catch(next)
+}
