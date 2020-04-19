@@ -7,7 +7,7 @@ import { createGroup, createMessage, getMessages, getGroupInfo, getUser, updateM
 class Home extends Component {
   constructor() {
     super();
-    this.state = { onHomePage: true, groupsInitUsers: '', groupList: [], selectedGroup: undefined, newMemberUsername: '', newMessage: '', groupsMessages: [], pageNo: 1, sameId: undefined };
+    this.state = { onHomePage: true, groupsInitUsers: '', groupList: [], selectedGroup: undefined, newMemberUsername: '', newMessage: '', groupsMessages: [], pageNo: 1, sameId: undefined, isCreator: true };
   }
 
   componentDidMount = () => {
@@ -38,6 +38,9 @@ class Home extends Component {
     getGroupInfo(getUserToken(), groupId,
       response => {
         this.setState({ selectedGroup: response.data })
+        if (this.state.selectedGroup.creator !== this.props.userInfo.id) {
+          this.setState({isCreator: false})
+        }
       },
       error => {
       }
@@ -198,13 +201,13 @@ class Home extends Component {
   }
 
   render() {
-    const { groupsInitUsers, onHomePage, newMessage, groupsMessages, selectedGroup } = this.state;
+    const { groupsInitUsers, onHomePage, newMessage, groupsMessages, selectedGroup, isCreator } = this.state;
 
     return (
       <span>
 
           <h3 className="page-title">{selectedGroup ? selectedGroup.title : 'Home'}</h3>
-          {!onHomePage && <Button color='primary' size='sm' onClick={this.leaveGroup}>Leave Group</Button>}
+          {!isCreator && !onHomePage && <Button color='primary' size='sm' onClick={this.leaveGroup}>Leave Group</Button>}
 
           <Row>
             <Col md={12}>

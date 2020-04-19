@@ -150,6 +150,7 @@ class ManageGroups extends Component {
             <Form onSubmit={this.updateGroupTitle}>
               <input
                 name="newGroupTitle"
+                placeholder='enter a group title'
                 value={newGroupTitle}
                 onChange={this.onChangeNewGroupTitle}
               />                    
@@ -165,7 +166,7 @@ class ManageGroups extends Component {
                 <Form onSubmit={this.addMembers}>
                   <input
                     name="newMember"
-                    placeholder="enter usernames"
+                    placeholder="add user to group"
                     value={newMember}
                     onChange={this.onChangeNewMember}
                   />                    
