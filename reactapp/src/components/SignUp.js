@@ -57,11 +57,11 @@ class SignUp extends Component {
           <div className="account__card">
             <div className="account__head">
               <h3 className="account__title">
-                <span className="account__logo"> Kid
-                  <span className="account__logo-accent">Coders</span>
+                <span className="account__logo"> The
+                  <span className="account__logo-accent">Chatterbox</span>
                 </span>
               </h3>
-              <h4 className="account__subhead subhead">Coding, not kidding</h4>
+              <h4 className="account__subhead subhead">(Insert Catchphrase Here)</h4>
             </div>
 
             <form className="form">

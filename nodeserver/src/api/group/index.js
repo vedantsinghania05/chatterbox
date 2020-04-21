@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { master, token } from '../../services/passport'
-import { create, getGroupsForUser, getGroupInfo, getGroupMembers, updateGroupTitle, updateGroupMembers, destroy } from './controller'
+import { create, getGroupsForUser, getGroupInfo, getGroupMembers, updateGroupTitle, updateGroupMembers, destroy, updateGroupCreator } from './controller'
 import { schema } from './model'
 export Group, { schema } from './model'
 
@@ -33,5 +33,9 @@ router.put('/:id/addMembers',
 router.delete('/:id',
   token({ required: true }),
   destroy)
+
+router.put('/:id/changecreator',
+  token({ required: true }),
+  updateGroupCreator)
 
 export default router

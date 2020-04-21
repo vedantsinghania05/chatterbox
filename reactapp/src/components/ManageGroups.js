@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Container, Row, Card, CardBody, Button, Form } from 'reactstrap';
-import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup, getUser, deleteGroup, deleteGroupsMessage } from '../nodeserverapi'
+import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup, getUser, deleteGroup, deleteGroupsMessage, updateCreatorGroup } from '../nodeserverapi'
 import { Link } from 'react-router-dom'
 
 
@@ -139,6 +139,23 @@ class ManageGroups extends Component {
 
   }
 
+  updateGroupCreator = (member, i) => {
+    const{ groupInfo } = this.state
+    updateCreatorGroup(getUserToken(), groupInfo.id, member.id, 
+      response => {
+        getUser(this.props.userInfo.id, getUserToken(),
+          response => {
+            this.props.setUserInfo(response.data)
+          },
+          error => {
+          }
+        )
+      },
+      error => {
+      }
+    )
+  }
+
   render() {
 		const { groupsMembers, newMember, newGroupTitle, groupInfo } = this.state;
 
@@ -179,6 +196,7 @@ class ManageGroups extends Component {
                     {groupsMembers.map((member, index) => <tr key={index}>
                       <td>{groupInfo.creator !== member.id ? <Button onClick={()=>this.deleteGroupMember(member, index)}>x</Button> : <Button disabled>x</Button>}</td>
                       <td>{member.email}</td>
+                      {groupInfo.creator !== member.id ? <td><Button><Link onClick={()=>this.updateGroupCreator(member, index)} to='/'>Make Admin</Link></Button></td> : <td>Admin</td>}
                     </tr>)}
                   </tbody>	
                 </table>	

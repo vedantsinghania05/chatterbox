@@ -140,6 +140,17 @@ export const deleteGroup = (token, groupId, successCbk, errorCbk) => {
   .then(successCbk)
   .catch(errorCbk);
 }
+
+export const updateCreatorGroup = (token, groupId, creator, successCbk, errorCbk) => {
+  axiosInstance.put(nodeserverUrl + '/groups/' + groupId + '/changecreator',
+    {
+      access_token: token,
+      creator: creator
+    }
+  )
+  .then(successCbk)
+  .catch(errorCbk);
+}
 /**
  * Message
  */

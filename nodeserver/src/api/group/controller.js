@@ -122,3 +122,16 @@ export const destroy = ({ params }, res, next) => {
     })
     .catch(next)
 }
+
+export const updateGroupCreator = ({params, body}, res, next) => {
+  Group.findById(params.id)
+  .then(group => {
+    if (!group) return next(resInternal('Failed to find group'));
+    if (body.creator) group.creator = body.creator
+    return group.save()
+  })
+  .then(group => {
+    if (!group) return next(resInternal('Failed to update group'));
+    return resOk(res, group.view(true));
+  })
+}
