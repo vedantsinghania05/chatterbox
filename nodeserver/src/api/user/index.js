@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { password as passwordAuth, master, token } from '../../services/passport'
-import { show, create, update, updatePassword, destroy, getUserByEmail, setCreator } from './controller'
+import { show, create, update, updatePassword, destroy, getValidUsers } from './controller'
 import { schema } from './model'
 export User, { schema } from './model'
 
@@ -23,6 +23,10 @@ router.post('/',
 router.put('/:id',
   token({ required: true }),
   update)
+
+router.put('/',
+  token({ required: true }),
+  getValidUsers)
 
 router.put('/:id/password',
   passwordAuth(),

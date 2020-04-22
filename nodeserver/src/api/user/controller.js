@@ -59,6 +59,13 @@ export const update = ({ params, body, user }, res, next) =>
     })
     .catch(next)
 
+export const getValidUsers = ({ body }, res, next) => {
+  User.find({ email: { $in: body.emails } })
+    .then(users => {
+      return resOk(res, users.map(u => u.view(true)))
+    })
+}
+
 export const updatePassword = ({ params, body, user }, res, next) =>
   User.findById(params.id === 'me' ? user.id : params.id)
     .then(user => {
