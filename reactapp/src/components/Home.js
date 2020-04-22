@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Row, Card, CardBody, Button, Form } from 'reactstrap';
-import { createGroup, createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, countGroupsMessage } from '../nodeserverapi'
+import { createGroup, createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, countGroupsMessage, getValidUsers } from '../nodeserverapi'
 
 class Home extends Component {
   constructor() {
@@ -64,39 +64,59 @@ class Home extends Component {
     const { groupsInitUsers, groupList } = this.state;
 
     let emailsToAdd = this.parseForUserEmails(groupsInitUsers)
-    emailsToAdd.unshift(this.props.userInfo.email)
 
-    let groupsDefaultTitle = ''
-    let emailNo = 1
+    let validUserEmails = []
+    let validUsers = []
 
-    for (let email of emailsToAdd) {
-      let nickname = this.getUserNickname(email)
-
-      if (emailNo < emailsToAdd.length) {
-        groupsDefaultTitle = groupsDefaultTitle + nickname + ', '
-      } else {
-        groupsDefaultTitle = groupsDefaultTitle + nickname
-      }
-      
-      emailNo++
-    }
-
-    createGroup(groupsDefaultTitle, emailsToAdd, this.props.userInfo.id,
+    getValidUsers(getUserToken(), emailsToAdd,
       response => {
-        groupList.push(response.data)
-        this.setState({ groupsInitUsers: '' })
 
-        getUser(this.props.userInfo.id, getUserToken(),
+        validUsers = response.data
+
+        for (let user of validUsers) {
+          validUserEmails.push(user.email)
+        } 
+    
+        validUserEmails.unshift(this.props.userInfo.email)
+    
+        let groupsDefaultTitle = ''
+        let emailNo = 1
+
+        for (let email of validUserEmails) {
+          let nickname = this.getUserNickname(email)
+    
+          if (emailNo < validUserEmails.length) {
+            groupsDefaultTitle = groupsDefaultTitle + nickname + ', '
+          } else {
+            groupsDefaultTitle = groupsDefaultTitle + nickname
+          }
+          
+          emailNo++
+        }
+    
+        createGroup(groupsDefaultTitle, validUserEmails, this.props.userInfo.id,
           response => {
-            this.props.setUserInfo(response.data)
+            groupList.push(response.data)
+            this.setState({ groupsInitUsers: '' })
+    
+            getUser(this.props.userInfo.id, getUserToken(),
+              response => {
+                this.props.setUserInfo(response.data)
+              },
+              error => {
+              }
+            )
           },
           error => {
           }
         )
+    
+
       },
       error => {
       }
     )
+
   }
 
   parseForUserEmails = (emailsString) => {
