@@ -43,3 +43,13 @@ export const deleteGroupsMessages = ({ params }, res, next) => {
     })
     .catch(next)
 }
+
+export const countGroupsMessages =({ params }, res, next) => {
+  Message.countDocuments({ group: params.id })
+  .then(messages => {
+    if (!messages && messages != 0) return next(resInternal('Failed to count messages'))
+    // return console.log(">>>>>>>", messages)
+    return resOk(res, messages)
+  })
+  .catch(next)
+}

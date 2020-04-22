@@ -182,3 +182,11 @@ export const deleteGroupsMessage = (token, groupId, successCbk, errorCbk) => {
   .then(successCbk)
   .catch(errorCbk)
 }
+
+export const countGroupsMessage = (token, groupId, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/messages/' + groupId + '/count',
+   { headers: { Authorization: 'Bearer ' + token } }
+  )
+  .then(successCbk)
+  .catch(errorCbk);
+}

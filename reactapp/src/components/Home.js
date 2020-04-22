@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Row, Card, CardBody, Button, Form } from 'reactstrap';
-import { createGroup, createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup } from '../nodeserverapi'
+import { createGroup, createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, countGroupsMessage } from '../nodeserverapi'
 
 class Home extends Component {
   constructor() {
     super();
-    this.state = { onHomePage: true, groupsInitUsers: '', groupList: [], selectedGroup: undefined, newMemberUsername: '', newMessage: '', groupsMessages: [], pageNo: 1, sameId: undefined, isCreator: true };
+    this.state = { onHomePage: true, groupsInitUsers: '', groupList: [], selectedGroup: undefined, 
+    newMemberUsername: '', newMessage: '', groupsMessages: [], pageNo: 1, sameId: undefined, 
+    isCreator: true, messageCount: undefined, reset: false };
   }
 
   componentDidMount = () => {
@@ -16,7 +18,7 @@ class Home extends Component {
       const { groupId } = this.props.location.state
       this.getGroup(groupId)
       this.getGroupMessages(groupId, 0)
-      this.setState({onHomePage: this.props.location.backToGroup})
+      this.setState({onHomePage: this.props.location.backToGroup, pageNo: 1})
     }
 
   }
@@ -30,7 +32,7 @@ class Home extends Component {
     if (newGroupId && newGroupId!==oldGroupId) {
       this.getGroup(newGroupId)
       this.getGroupMessages(newGroupId, 0)
-      this.setState({ onHomePage: false })
+      this.setState({ onHomePage: false, pageNo: 1, reset: false })
     }
   }
 
@@ -107,13 +109,23 @@ class Home extends Component {
   }
 
   getGroupMessages = (groupId, newPageNo) => {
-    const { pageNo } = this.state;
+    const { pageNo, messageCount } = this.state;
     let skipCount;
+    countGroupsMessage(getUserToken(), groupId, 
+      response => {
+        this.setState({messageCount: response.data})
+      },
+      error => {
+      }
+    )
 
     if (newPageNo) {
       skipCount = newPageNo * 10
     } else {
       skipCount = pageNo * 10
+    }
+    if (skipCount >= messageCount && messageCount) {
+      this.setState({reset: true})
     }
 
     getMessages(getUserToken(), groupId, skipCount-10,
@@ -133,15 +145,19 @@ class Home extends Component {
   }
 
   pageNoChanger = (shouldIncrease) => {
-    const { pageNo, sameId } = this.state;
+    const { pageNo, sameId, reset } = this.state;
     let newPageNo = pageNo;
-
+    
     if (shouldIncrease) {
       newPageNo = pageNo + 1
     } else {
       if (pageNo > 1) {
         newPageNo = pageNo - 1
       }
+    }
+
+    if (reset) {
+      this.setState({reset: false})
     }
 
     this.getGroupMessages(sameId, newPageNo)
@@ -201,7 +217,7 @@ class Home extends Component {
   }
 
   render() {
-    const { groupsInitUsers, onHomePage, newMessage, groupsMessages, selectedGroup, isCreator } = this.state;
+    const { groupsInitUsers, onHomePage, newMessage, groupsMessages, selectedGroup, isCreator, reset } = this.state;
 
     return (
       <span>
@@ -226,8 +242,10 @@ class Home extends Component {
 
                     <hr></hr>
                     
-                    <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>
+                    {this.state.messageCount >= 10 && <div>
+                    {reset ? <Button disabled size='sm' >{'<'}</Button> : <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>}
                     <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>
+                    </div>}
 
                     <table>
                       <tbody>
