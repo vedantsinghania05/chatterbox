@@ -196,7 +196,7 @@ class ManageGroups extends Component {
                     {groupsMembers.map((member, index) => <tr key={index}>
                       <td>{groupInfo.creator !== member.id ? <Button onClick={()=>this.deleteGroupMember(member, index)}>x</Button> : <Button disabled>x</Button>}</td>
                       <td>{member.email}</td>
-                      {groupInfo.creator !== member.id ? <td><Button><Link onClick={()=>this.updateGroupCreator(member, index)} to='/'>Make Admin</Link></Button></td> : <td>Admin</td>}
+                      {groupInfo.creator !== member.id ? <td><Button><Link onClick={()=>this.updateGroupCreator(member, index)} to='/'>Make Admin</Link></Button></td> : <td></td>}
                     </tr>)}
                   </tbody>	
                 </table>	
