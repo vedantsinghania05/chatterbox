@@ -17,7 +17,7 @@ class Home extends Component {
     if (this.props.location.state) {
       const { groupId } = this.props.location.state
       this.getGroup(groupId)
-      this.getGroupMessages(groupId, 0)
+      this.getGroupMessages(groupId, 1)
       this.setState({onHomePage: this.props.location.backToGroup, pageNo: 1})
     }
 
@@ -31,7 +31,7 @@ class Home extends Component {
 
     if (newGroupId && newGroupId!==oldGroupId) {
       this.getGroup(newGroupId)
-      this.getGroupMessages(newGroupId, 0)
+      this.getGroupMessages(newGroupId, 1)
       this.setState({ onHomePage: false, pageNo: 1, reset: false })
     }
   }
