@@ -144,7 +144,7 @@ class Home extends Component {
     } else {
       skipCount = pageNo * 10
     }
-    if (skipCount >= messageCount && messageCount) {
+    if (skipCount > messageCount && messageCount) {
       this.setState({reset: true})
     }
 
@@ -188,7 +188,7 @@ class Home extends Component {
     e.preventDefault()
 
     const { selectedGroup, newMessage } = this.state;
-
+    this.setState({pageNo: 1, reset: false})
     createMessage(this.props.userInfo.id, selectedGroup.id, newMessage,
       response => {
         this.getGroupMessages(selectedGroup.id, 0)
@@ -237,7 +237,7 @@ class Home extends Component {
   }
 
   render() {
-    const { groupsInitUsers, onHomePage, newMessage, groupsMessages, selectedGroup, isCreator, reset } = this.state;
+    const { groupsInitUsers, onHomePage, newMessage, groupsMessages, selectedGroup, isCreator, reset, messageCount, pageNo } = this.state;
 
     return (
       <span>
@@ -262,9 +262,9 @@ class Home extends Component {
 
                     <hr></hr>
                     
-                    {this.state.messageCount >= 10 && <div>
+                    {messageCount > 10 && <div>
                     {reset ? <Button disabled size='sm' >{'<'}</Button> : <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>}
-                    <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>
+                    {pageNo === 1 ? <Button disabled size='sm' >{'>'}</Button> : <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>}
                     </div>}
 
                     <table>
