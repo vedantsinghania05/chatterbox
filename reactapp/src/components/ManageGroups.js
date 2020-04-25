@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Container, Row, Card, CardBody, Button, Form } from 'reactstrap';
-import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup, getUser, deleteGroup, deleteGroupsMessage, updateCreatorGroup } from '../nodeserverapi'
+import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup, getUser, deleteGroup, deleteGroupsMessage, updateCreatorGroup, getValidUsers } from '../nodeserverapi'
 import { Link } from 'react-router-dom'
 
 
@@ -56,14 +56,28 @@ class ManageGroups extends Component {
   addMembers = (e) => {
     e.preventDefault()
     const { groupInfo, newMember } = this.state;
-    updateMembersGroup(getUserToken(), groupInfo.id, true, newMember,
+
+    getValidUsers(getUserToken(), [newMember],
       response => {
-        this.getMembers(groupInfo.id)
-        this.setState({ groupInfo: response.data, newMember: '' })
+        let validUsers = response.data
+        
+        if (validUsers.length !== 0) {
+          updateMembersGroup(getUserToken(), groupInfo.id, true, newMember,
+            response => {
+              if (response.data) {        
+                this.getMembers(groupInfo.id)
+                this.setState({ groupInfo: response.data, newMember: '' })
+              }
+            },
+            error => {
+            }
+          )
+        }
       },
       error => {
       }
     )
+
   }
 
   deleteGroupMember = (member, i) => {
