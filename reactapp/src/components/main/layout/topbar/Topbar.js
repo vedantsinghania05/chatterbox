@@ -21,7 +21,11 @@ class Topbar extends Component {
               changeMobileSidebarVisibility={changeMobileSidebarVisibility}
               changeSidebarVisibility={changeSidebarVisibility}
             />
-            <Link className="topbar__logo" to="/" />
+            <div className="topbar__logo">
+              <span className="account__logo"> The
+                <span className="account__logo-accent2">Chatterbox</span>
+              </span>
+            </div>
           </div>
           <div className="topbar__right">
             <TopbarProfile />

@@ -57,10 +57,10 @@
   background-position-x: left;
   background-size: contain;
   display: none;
-
-  @include themify($themes) {
-    background-image: themed('logoImg');
-  }
+  font-size: x-large;
+  // @include themify($themes) {
+  //   background-image: themed('logoImg');
+  // }
 
   @media screen and (min-width: 768px) {
     display: block;
