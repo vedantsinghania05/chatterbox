@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Row, Card, CardBody, Button, Form } from 'reactstrap';
 import { createGroup, createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, countGroupsMessage, getValidUsers } from '../nodeserverapi'
@@ -15,6 +16,7 @@ class Home extends Component {
   componentDidMount = () => {
 
     if (this.props.location.state) {
+      console.log('>>>>>>>>>>> ***')
       const { groupId } = this.props.location.state
       this.getGroup(groupId)
       this.getGroupMessages(groupId, 1)
@@ -39,7 +41,9 @@ class Home extends Component {
   getGroup = (groupId) => {
     getGroupInfo(getUserToken(), groupId,
       response => {
+        console.log('*******', response.data)
         this.setState({ selectedGroup: response.data })
+        console.log('<><><><>', this.state.selectedGroup)
         if (this.state.selectedGroup.creator !== this.props.userInfo.id) {
           this.setState({isCreator: false})
         }
@@ -257,6 +261,7 @@ class Home extends Component {
                       onChange={this.onChangeGroupsInitUsers}
                     />
                   </Form>
+                  {selectedGroup && isCreator && <Link to={{pathname:'/manage', state: {groupId: selectedGroup.id}}}>Manage</Link>}
 
                   {!onHomePage && <span>
 
