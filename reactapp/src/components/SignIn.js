@@ -110,17 +110,19 @@ class SignIn extends Component {
                   ><EyeIcon />
                   </button>
                 </div>
-                <div className="account__forgot-password">
+                {/* <div className="account__forgot-password">
                   <a href="/">Forgot a password?</a>
-                </div>
+                </div> */}
               </div>
               {/*<div className="form__form-group">
                 <div className="form__form-group-field">
                   <CheckBox name="remember_me" label="Remember me" value="on" onChange={() => {}} />
                 </div>
               </div>*/}
-              <Button className="btn btn-primary account__btn account__btn--small" onClick={this.signIn}>Sign In</Button>
-              <Link className="btn btn-outline-primary account__btn account__btn--small" to="/signup">Sign Up</Link>
+              <Button className="btn btn-primary account__btn account__btn--small" onClick={this.signIn}>Submit</Button>
+              <Link to="/signup">Create Account</Link>
+              {/* The code below is extra scss for the link above */}
+              {/* className="btn btn-outline-primary account__btn account__btn--small" */}
             </form>
 
             {/*<div className="account__or">
