@@ -16,7 +16,6 @@ class Home extends Component {
   componentDidMount = () => {
 
     if (this.props.location.state) {
-      console.log('>>>>>>>>>>> ***')
       const { groupId } = this.props.location.state
       this.getGroup(groupId)
       this.getGroupMessages(groupId, 1)
@@ -41,9 +40,7 @@ class Home extends Component {
   getGroup = (groupId) => {
     getGroupInfo(getUserToken(), groupId,
       response => {
-        console.log('*******', response.data)
         this.setState({ selectedGroup: response.data })
-        console.log('<><><><>', this.state.selectedGroup)
         if (this.state.selectedGroup.creator !== this.props.userInfo.id) {
           this.setState({isCreator: false})
         }

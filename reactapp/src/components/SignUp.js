@@ -61,7 +61,7 @@ class SignUp extends Component {
                   <span className="account__logo-accent">Chatterbox</span>
                 </span>
               </h3>
-              <h4 className="account__subhead subhead">(Insert Catchphrase Here)</h4>
+              <h4 className="account__subhead subhead">Sign Up</h4>
             </div>
 
             <form className="form">
@@ -112,7 +112,7 @@ class SignUp extends Component {
                 </div>
               </div>*/}
               <Button className="btn btn-primary account__btn account__btn--small" onClick={this.signUp}>Submit</Button>
-              <Link to="/signin">Log In</Link>
+              <Link to="/signin">Go To Sign In</Link>
               {/* The code below is extra scss for the link above */}
               {/* className="btn btn-outline-primary account__btn account__btn--small" */}
             </form>
