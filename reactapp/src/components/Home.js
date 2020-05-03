@@ -16,8 +16,6 @@ class Home extends Component {
 
   componentDidMount = () => {
 
-    console.log('>>>>>>', groupPrefixes, groupPrefixes2, groupRoots)
-
     if (this.props.location.state) {
       const { groupId } = this.props.location.state
       this.getGroup(groupId)
@@ -86,20 +84,14 @@ class Home extends Component {
         let listOneLength = groupPrefixes.length
         let listTwoLength = groupPrefixes2.length
         let listThreeLength = groupRoots.length
-
-        console.log(listOneLength, listTwoLength, listThreeLength)
         
         let prefixOneIndex = Math.floor(Math.random() * Math.floor(listOneLength))
         let prefixTwoIndex = Math.floor(Math.random() * Math.floor(listTwoLength))
         let rootIndex = Math.floor(Math.random() * Math.floor(listThreeLength))
 
-        console.log(prefixOneIndex, prefixTwoIndex, rootIndex)
-
         let prefixOne = groupPrefixes[prefixOneIndex]
         let prefixTwo = groupPrefixes2[prefixTwoIndex]
         let root = groupRoots[rootIndex]
-
-        console.log(prefixOne, prefixTwo, root)
 
         let groupsDefaultTitle = prefixOne + ' ' + prefixTwo + ' ' + root
     
