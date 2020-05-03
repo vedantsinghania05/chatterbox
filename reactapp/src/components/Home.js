@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Row, Card, CardBody, Button, Form } from 'reactstrap';
 import { createGroup, createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, countGroupsMessage, getValidUsers } from '../nodeserverapi'
+import { groupPrefixes, groupPrefixes2, groupRoots } from './GroupNames';
 
 class Home extends Component {
   constructor() {
@@ -14,6 +15,8 @@ class Home extends Component {
   }
 
   componentDidMount = () => {
+
+    console.log('>>>>>>', groupPrefixes, groupPrefixes2, groupRoots)
 
     if (this.props.location.state) {
       const { groupId } = this.props.location.state
