@@ -87,7 +87,6 @@
 }
 
 .sidebar__block {
-  padding: 15px 0;
 
   @include themify($themes) {
     border-bottom: 1px solid themed('colorBorder');

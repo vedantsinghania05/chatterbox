@@ -65,9 +65,7 @@ class SignIn extends Component {
           <div className="account__card">
             <div className="account__head">
               <h3 className="account__title">
-                <span className="account__logo"> The
-                  <span className="account__logo-accent">Chatterbox</span>
-                </span>
+                <span className="account__logo">Chatterbox</span>
               </h3>
               <h4 className="account__subhead subhead">Sign In</h4> 
             </div>
