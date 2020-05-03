@@ -242,60 +242,61 @@ class Home extends Component {
 
     return (
       <span>
+        {onHomePage && <h3 className="page-title">Home</h3>}
 
-          <h3 className="page-title">{selectedGroup ? selectedGroup.title : 'Home'}</h3>
-          {!isCreator && !onHomePage && <Button color='primary' size='sm' onClick={this.leaveGroup}>Leave Group</Button>}
+        <Row>
+          <Col md={12}>
+            <Card>
+              <CardBody>
+                <Form onSubmit={this.createNewGroup}>
+                  <input
+                    name="groupsInitUsers"
+                    placeholder="enter user(s)"
+                    value={groupsInitUsers}
+                    onChange={this.onChangeGroupsInitUsers}
+                  />
+                </Form>
 
-          <Row>
-            <Col md={12}>
-              <Card>
-                <CardBody>
-                  <Form onSubmit={this.createNewGroup}>
+                {!onHomePage && <span>
+                  <hr></hr>
+
+                  <Row>
+                    <Col md='auto'><h5 className="page-title2">{selectedGroup ? selectedGroup.title : ''}</h5></Col>
+                    {!isCreator && !onHomePage && <Col md='auto'><Button color='primary' size='sm' onClick={this.leaveGroup}>Leave Group</Button></Col>}
+                    {selectedGroup && isCreator && <Col md='auto'><Link to={{pathname:'/manage', state: {groupId: selectedGroup.id}}}><Button color='primary' size='sm'>Manage</Button></Link></Col>}
+                  </Row>
+
+                  {messageCount > 10 && <div>
+                  {reset ? <Button disabled size='sm' >{'<'}</Button> : <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>}
+                  {pageNo === 1 ? <Button disabled size='sm' >{'>'}</Button> : <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>}
+                  </div>}
+
+                  <table>
+                    <tbody>
+                      {groupsMessages.map((message, index) => <tr key={index}>
+                        <td>{message.poster + '-'}</td>
+                        <td><br></br></td>
+                        <td>{message.content}</td>
+                      </tr>)}
+                    </tbody>
+                  </table> 
+                  <br/>
+
+                  <Form onSubmit={this.postMsg}>
                     <input
-                      name="groupsInitUsers"
-                      placeholder="enter user(s)"
-                      value={groupsInitUsers}
-                      onChange={this.onChangeGroupsInitUsers}
-                    />
+                      name="newMessage"
+                      placeholder="enter message"
+                      value={newMessage}
+                      onChange={this.onChangeNewMessage}
+                    />                    
                   </Form>
-                  {selectedGroup && isCreator && <Link to={{pathname:'/manage', state: {groupId: selectedGroup.id}}}>Manage</Link>}
+                  
+                </span>}
 
-                  {!onHomePage && <span>
-
-                    <hr></hr>
-                    
-                    {messageCount > 10 && <div>
-                    {reset ? <Button disabled size='sm' >{'<'}</Button> : <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>}
-                    {pageNo === 1 ? <Button disabled size='sm' >{'>'}</Button> : <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>}
-                    </div>}
-
-                    <table>
-                      <tbody>
-                        {groupsMessages.map((message, index) => <tr key={index}>
-                          <td>{message.poster + '-'}</td>
-                          <td><br></br></td>
-                          <td>{message.content}</td>
-                        </tr>)}
-                      </tbody>
-                    </table> 
-
-                    <hr></hr>
-
-                    <Form onSubmit={this.postMsg}>
-                      <input
-                        name="newMessage"
-                        placeholder="enter message"
-                        value={newMessage}
-                        onChange={this.onChangeNewMessage}
-                      />                    
-                    </Form>
-                    
-                  </span>}
-
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
 
       </span>
 
