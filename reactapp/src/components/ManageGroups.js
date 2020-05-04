@@ -220,7 +220,7 @@ class ManageGroups extends Component {
                 value={newGroupTitle}
                 onChange={this.onChangeNewGroupTitle}
               /> 
-              <Button size='sm' onClick={this.randomizeNewGroupTitle}>Randomize</Button>                   
+              <Button size='sm' color='primary' onClick={this.randomizeNewGroupTitle}>Randomize</Button>                   
             </Form>
             <br></br>
           </Col>
