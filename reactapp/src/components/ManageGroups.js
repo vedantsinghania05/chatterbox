@@ -4,7 +4,7 @@ import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/conta
 import { Col, Container, Row, Card, CardBody, Button, Form } from 'reactstrap';
 import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup, getUser, deleteGroup, deleteGroupsMessage, updateCreatorGroup, getValidUsers } from '../nodeserverapi'
 import { Link } from 'react-router-dom'
-
+import { groupPrefixes, groupPrefixes2, groupRoots } from './GroupNames';
 
 class ManageGroups extends Component {
   constructor() {
@@ -123,6 +123,41 @@ class ManageGroups extends Component {
     )
   }
 
+  randomizeNewGroupTitle = () => {
+    const { groupInfo } = this.state;
+
+    let listOneLength = groupPrefixes.length
+    let listTwoLength = groupPrefixes2.length
+    let listThreeLength = groupRoots.length
+    
+    let prefixOneIndex = Math.floor(Math.random() * Math.floor(listOneLength))
+    let prefixTwoIndex = Math.floor(Math.random() * Math.floor(listTwoLength))
+    let rootIndex = Math.floor(Math.random() * Math.floor(listThreeLength))
+
+    let prefixOne = groupPrefixes[prefixOneIndex]
+    let prefixTwo = groupPrefixes2[prefixTwoIndex]
+    let root = groupRoots[rootIndex]
+
+    let initGroupsRandomizedTitle = prefixOne + ' ' + prefixTwo + ' ' + root
+    let groupsRandomizedTitle = initGroupsRandomizedTitle.trim()
+
+    updateTitleGroup(getUserToken(), groupInfo.id, groupsRandomizedTitle,
+      response => {
+        this.setState({ groupInfo: response.data, newGroupTitle: groupsRandomizedTitle })
+        
+        getUser(this.props.userInfo.id, getUserToken(),
+          response => {
+            this.props.setUserInfo(response.data)
+          },
+          error => {
+          }
+        )
+      },
+      error => {
+      }
+    )    
+  }
+
   removeGroup = () => {
     const { groupInfo } = this.state
     deleteGroup(getUserToken(), groupInfo.id,
@@ -184,7 +219,8 @@ class ManageGroups extends Component {
                 placeholder='enter a group title'
                 value={newGroupTitle}
                 onChange={this.onChangeNewGroupTitle}
-              />                    
+              /> 
+              <Button size='sm' onClick={this.randomizeNewGroupTitle}>Randomize</Button>                   
             </Form>
             <br></br>
           </Col>

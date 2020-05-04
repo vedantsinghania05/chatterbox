@@ -93,7 +93,8 @@ class Home extends Component {
         let prefixTwo = groupPrefixes2[prefixTwoIndex]
         let root = groupRoots[rootIndex]
 
-        let groupsDefaultTitle = prefixOne + ' ' + prefixTwo + ' ' + root
+        let initGroupsDefaultTitle = prefixOne + ' ' + prefixTwo + ' ' + root
+        let groupsDefaultTitle = initGroupsDefaultTitle.trim()
     
         createGroup(groupsDefaultTitle, validUserEmails, this.props.userInfo.id,
           response => {

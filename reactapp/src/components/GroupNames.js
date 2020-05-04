@@ -1,5 +1,5 @@
-export const groupPrefixes = ['awesome', 'funny', 'orange', 'radioactive', 'grumpy', 'happy', 'gluttonous', 'snooty']
+export const groupPrefixes = ['awesome', 'funny', 'orange', 'ruthless', 'brainiac', 'happy', 'gluttonous', 'snooty', 'tall', 'sad', 'blue', 'green', 'red', '']
 
-export const groupPrefixes2 = ['chunky', 'slippery', 'brainiac', 'buttery', 'sticky', 'squishy', 'ruthless']
+export const groupPrefixes2 = ['chunky', 'slippery', 'grumpy', 'buttery', 'sticky', 'squishy', 'radioactive', 'chubby', 'sneaky', 'grouchy', 'seasick', 'rubbery']
 
-export const groupRoots = ['whales', 'turtles', 'monkeys', 'crocodiles', 'salsa', 'bananas', 'seaweed', 'bicycles']
+export const groupRoots = ['whales', 'turtles', 'monkeys', 'crocodiles', 'salsa', 'bananas', 'seaweed', 'bicycles', 'chimneys', 'orcas', 'spinach', 'donkeys']
