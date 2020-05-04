@@ -1,5 +1,6 @@
-.test {
-  color: blue;
+.test2 {
+  background-color:rgb(95, 171, 253);
+  color: white;
 }
 
 
@@ -286,9 +287,9 @@
   &.icon, &.icon.btn-secondary {
 
     &.disabled {
-      background-color: #f2f4f7;
+      background-color: #dadada;
       border-color: #f2f4f7;
-      color: #dddddd;
+      color: white;
       pointer-events: none;
 
       p {

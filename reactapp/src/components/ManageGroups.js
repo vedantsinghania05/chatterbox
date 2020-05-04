@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
-import { Col, Container, Row, Card, CardBody, Button, Form } from 'reactstrap';
+import { Col, Container, Row, Card, CardBody, Button, Form, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup, getUser, deleteGroup, deleteGroupsMessage, updateCreatorGroup, getValidUsers } from '../nodeserverapi'
 import { Link } from 'react-router-dom'
 import { groupPrefixes, groupPrefixes2, groupRoots } from './GroupNames';
@@ -213,15 +213,15 @@ class ManageGroups extends Component {
         <Row>
           <Col md={12}>
             <br></br>
+            <Row md='auto'>
             <Form onSubmit={this.updateGroupTitle}>
-              <input
-                name="newGroupTitle"
-                placeholder='enter a group title'
-                value={newGroupTitle}
-                onChange={this.onChangeNewGroupTitle}
-              /> 
-              <Button size='sm' color='primary' onClick={this.randomizeNewGroupTitle}>Randomize</Button>                   
+              <InputGroup size='sm'>
+                <InputGroupAddon addonType="prepend"><p>     </p></InputGroupAddon>
+                <Input name="newGroupTitle" placeholder='enter a group title' value={newGroupTitle} onChange={this.onChangeNewGroupTitle}/>
+                <InputGroupAddon addonType="append"><Button color='primary' onClick={this.randomizeNewGroupTitle}>Randomize</Button></InputGroupAddon>
+              </InputGroup>                 
             </Form>
+            </Row>
             <br></br>
           </Col>
         </Row>
@@ -244,9 +244,9 @@ class ManageGroups extends Component {
                 <table>
                   <tbody>
                     {groupsMembers.map((member, index) => <tr key={index}>
-                      <td>{groupInfo.creator !== member.id ? <Button onClick={()=>this.deleteGroupMember(member, index)}>x</Button> : <Button disabled>x</Button>}</td>
+                      <td>{groupInfo.creator !== member.id ? <Button color='primary' onClick={()=>this.deleteGroupMember(member, index)}>x</Button> : <Button disabled>x</Button>}</td>
                       <td>{member.email}</td>
-                      {groupInfo.creator !== member.id ? <td><Button><Link onClick={()=>this.updateGroupCreator(member, index)} to='/'>Make Admin</Link></Button></td> : <td></td>}
+                      {groupInfo.creator !== member.id ? <td><Link onClick={()=>this.updateGroupCreator(member, index)} to='/'><Button color='primary' size='sm'>Make Admin</Button></Link></td> : <td></td>}
                     </tr>)}
                   </tbody>	
                 </table>	

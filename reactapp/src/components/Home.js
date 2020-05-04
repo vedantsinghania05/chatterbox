@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
-import { Col, Row, Card, CardBody, Button, Form } from 'reactstrap';
+import { Col, Row, Card, CardBody, Button, Form, Container } from 'reactstrap';
 import { createGroup, createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, countGroupsMessage, getValidUsers } from '../nodeserverapi'
 import { groupPrefixes, groupPrefixes2, groupRoots } from './GroupNames';
 
@@ -42,9 +42,9 @@ class Home extends Component {
     getGroupInfo(getUserToken(), groupId,
       response => {
         this.setState({ selectedGroup: response.data })
-        if (this.state.selectedGroup.creator !== this.props.userInfo.id) {
+        if (response.data.creator !== this.props.userInfo.id) {
           this.setState({isCreator: false})
-        }
+        } else this.setState({isCreator: true})
       },
       error => {
       }
@@ -239,10 +239,10 @@ class Home extends Component {
   }
 
   render() {
-    const { groupsInitUsers, onHomePage, newMessage, groupsMessages, selectedGroup, isCreator, reset, messageCount, pageNo } = this.state;
+    const { groupsInitUsers, onHomePage, newMessage, groupsMessages, selectedGroup, reset, messageCount, pageNo } = this.state;
 
     return (
-      <span>
+      <Container className="dashboard">
         {onHomePage && <h3 className="page-title">Home</h3>}
 
         <Row>
@@ -268,10 +268,10 @@ class Home extends Component {
             <Card>
               <CardBody>
 
-                <Row>
+                <Row md='auto'>
                   <Col md='auto'><h5 className="page-title2">{selectedGroup ? selectedGroup.title : ''}</h5></Col>
-                  {!isCreator && !onHomePage && <Col md='auto'><Button color='primary' size='sm' onClick={this.leaveGroup}>Leave Group</Button></Col>}
-                  {selectedGroup && isCreator && <Col md='auto'><Link to={{pathname:'/manage', state: {groupId: selectedGroup.id}}}><Button color='primary' size='sm'>Manage</Button></Link></Col>}
+                  {!this.state.isCreator && !onHomePage && <Col ><Button color='primary' size='sm' onClick={this.leaveGroup}>Leave Group</Button></Col>}
+                  {selectedGroup && this.state.isCreator && <Col><Link to={{pathname:'/manage', state: {groupId: selectedGroup.id}}}><Button color='primary' size='sm'>Manage</Button></Link></Col>}
                 </Row>
 
                 {messageCount > 10 && <div>
@@ -282,7 +282,7 @@ class Home extends Component {
                 <table>
                   <tbody>
                     {groupsMessages.map((message, index) => <tr key={index}>
-                      <td>{message.poster + '-'}</td>
+                      <td>{message.poster + ' -'}</td>
                       <td><br></br></td>
                       <td>{message.content}</td>
                     </tr>)}
@@ -303,7 +303,7 @@ class Home extends Component {
           </Col>
         </Row>}
 
-      </span>
+      </Container>
     );
   }
 }
