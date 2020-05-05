@@ -280,13 +280,15 @@ class Home extends Component {
                 </div>}
 
                 <table>
-                  <tbody>
-                    {groupsMessages.map((message, index) => <tr key={index}>
-                      <td>{message.poster + ' -'}</td>
-                      <td><br></br></td>
-                      <td>{message.content}</td>
-                    </tr>)}
-                  </tbody>
+                {groupsMessages.map((message, index) => <tbody>
+                      <tr key={index}>
+                      <td className='poster'>{message.poster}</td>
+                      </tr>
+                      <tr key={index}>
+                      <td className='content'>{message.content}</td>
+                      </tr>
+                      
+                  </tbody>)}
                 </table> 
                 <br/>
 
