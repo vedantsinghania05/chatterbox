@@ -190,15 +190,17 @@ class Home extends Component {
     e.preventDefault()
 
     const { selectedGroup, newMessage } = this.state;
-    this.setState({pageNo: 1, reset: false})
-    createMessage(this.props.userInfo.id, selectedGroup.id, newMessage,
-      response => {
-        this.getGroupMessages(selectedGroup.id, 0)
-        this.setState({ newMessage: '' })     
-      },
-      error => {
-      }
-    ) 
+    if (newMessage && newMessage[0] !== ' ') {
+      this.setState({pageNo: 1, reset: false})
+      createMessage(this.props.userInfo.id, selectedGroup.id, newMessage,
+        response => {
+          this.getGroupMessages(selectedGroup.id, 0)
+          this.setState({ newMessage: '' })     
+        },
+        error => {
+        }
+      ) 
+    }
   }
 
   getUserNickname = (username) => {
