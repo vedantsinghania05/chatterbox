@@ -292,10 +292,9 @@ class Home extends Component {
                       
                   </tbody>)}
                 </table> 
-                <br/>
 
                 <Form onSubmit={this.postMsg}>
-                  <input
+                  <input className='msginput'
                     name="newMessage"
                     placeholder="enter message"
                     value={newMessage}
