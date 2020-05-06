@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Row, Card, CardBody, Button, Form, Container } from 'reactstrap';
-import { createGroup, createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, countGroupsMessage, getValidUsers } from '../nodeserverapi'
-import { groupPrefixes, groupPrefixes2, groupRoots } from './GroupNames';
+import { createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, countGroupsMessage } from '../nodeserverapi'
 
 class Home extends Component {
   constructor() {
@@ -52,87 +51,8 @@ class Home extends Component {
 
   } 
 
-  onChangeGroupsInitUsers = (e) => {
-    this.setState({ groupsInitUsers: e.target.value })
-  }
-
   onChangeNewMessage = (e) => {
     this.setState({ newMessage: e.target.value })
-  }
-
-  createNewGroup = (e) => {
-    e.preventDefault()
-
-    const { groupsInitUsers, groupList } = this.state;
-
-    let emailsToAdd = this.parseForUserEmails(groupsInitUsers)
-
-    let validUserEmails = []
-    let validUsers = []
-
-    getValidUsers(getUserToken(), emailsToAdd,
-      response => {
-
-        validUsers = response.data
-
-        if (validUsers.length > 0) {
-
-          for (let user of validUsers) {
-            validUserEmails.push(user.email)
-          } 
-      
-          validUserEmails.unshift(this.props.userInfo.email)
-  
-          let listOneLength = groupPrefixes.length
-          let listTwoLength = groupPrefixes2.length
-          let listThreeLength = groupRoots.length
-          
-          let prefixOneIndex = Math.floor(Math.random() * Math.floor(listOneLength))
-          let prefixTwoIndex = Math.floor(Math.random() * Math.floor(listTwoLength))
-          let rootIndex = Math.floor(Math.random() * Math.floor(listThreeLength))
-  
-          let prefixOne = groupPrefixes[prefixOneIndex]
-          let prefixTwo = groupPrefixes2[prefixTwoIndex]
-          let root = groupRoots[rootIndex]
-  
-          let initGroupsDefaultTitle = prefixOne + ' ' + prefixTwo + ' ' + root
-          let groupsDefaultTitle = initGroupsDefaultTitle.trim()
-      
-          createGroup(groupsDefaultTitle, validUserEmails, this.props.userInfo.id,
-            response => {
-              groupList.push(response.data)
-              this.setState({ groupsInitUsers: '' })
-      
-              getUser(this.props.userInfo.id, getUserToken(),
-                response => {
-                  this.props.setUserInfo(response.data)
-                },
-                error => {
-                }
-              )
-            },
-            error => {
-            }
-          )
-
-        } else {
-          this.setState({ groupsInitUsers: '' })
-        }
-
-      },
-      error => {
-      }
-    )
-
-  }
-
-  parseForUserEmails = (emailsString) => {
-    let emailsList = emailsString.split(/[ ,]+/)
-
-    for (let email of emailsList) {
-      email = email.trim()
-    }
-    return emailsList
   }
 
   getGroupMessages = (groupId, newPageNo) => {
@@ -246,29 +166,11 @@ class Home extends Component {
   }
 
   render() {
-    const { groupsInitUsers, onHomePage, newMessage, groupsMessages, selectedGroup, reset, messageCount, pageNo } = this.state;
+    const { onHomePage, newMessage, groupsMessages, selectedGroup, reset, messageCount, pageNo } = this.state;
 
     return (
       <Container className="dashboard">
         {onHomePage && <h3 className="page-title">Home</h3>}
-
-        <Row>
-          <Col md={12}>
-            <Card>
-              <CardBody>
-                {!onHomePage && <h5 className="page-title2">Create Group</h5>}
-                  <Form onSubmit={this.createNewGroup}>
-                    <input className='input'
-                      name="groupsInitUsers"
-                      placeholder="enter user(s)"
-                      value={groupsInitUsers}
-                      onChange={this.onChangeGroupsInitUsers}
-                    />
-                  </Form>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
 
         {!onHomePage && <Row>
           <Col md={12}>
