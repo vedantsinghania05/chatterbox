@@ -14,7 +14,8 @@ const messageSchema = new Schema({
         index: true
     },
     content: {
-        type: String
+        type: String,
+        trim: true
     }
 
 }, {

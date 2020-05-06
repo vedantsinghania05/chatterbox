@@ -196,15 +196,17 @@ class Home extends Component {
     e.preventDefault()
 
     const { selectedGroup, newMessage } = this.state;
-    this.setState({pageNo: 1, reset: false})
-    createMessage(this.props.userInfo.id, selectedGroup.id, newMessage,
-      response => {
-        this.getGroupMessages(selectedGroup.id, 0)
-        this.setState({ newMessage: '' })     
-      },
-      error => {
-      }
-    ) 
+    if (newMessage && newMessage[0] !== ' ') {
+      this.setState({pageNo: 1, reset: false})
+      createMessage(this.props.userInfo.id, selectedGroup.id, newMessage,
+        response => {
+          this.getGroupMessages(selectedGroup.id, 0)
+          this.setState({ newMessage: '' })     
+        },
+        error => {
+        }
+      ) 
+    }
   }
 
   getUserNickname = (username) => {
@@ -296,10 +298,9 @@ class Home extends Component {
                       
                   </tbody>)}
                 </table> 
-                <br/>
 
                 <Form onSubmit={this.postMsg}>
-                  <input
+                  <input className='msginput'
                     name="newMessage"
                     placeholder="enter message"
                     value={newMessage}
