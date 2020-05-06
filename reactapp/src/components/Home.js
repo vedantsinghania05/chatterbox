@@ -75,44 +75,50 @@ class Home extends Component {
 
         validUsers = response.data
 
-        for (let user of validUsers) {
-          validUserEmails.push(user.email)
-        } 
-    
-        validUserEmails.unshift(this.props.userInfo.email)
+        if (validUsers.length > 0) {
+          console.log('>>>>>', validUsers)
 
-        let listOneLength = groupPrefixes.length
-        let listTwoLength = groupPrefixes2.length
-        let listThreeLength = groupRoots.length
-        
-        let prefixOneIndex = Math.floor(Math.random() * Math.floor(listOneLength))
-        let prefixTwoIndex = Math.floor(Math.random() * Math.floor(listTwoLength))
-        let rootIndex = Math.floor(Math.random() * Math.floor(listThreeLength))
+          for (let user of validUsers) {
+            validUserEmails.push(user.email)
+          } 
+      
+          validUserEmails.unshift(this.props.userInfo.email)
+  
+          let listOneLength = groupPrefixes.length
+          let listTwoLength = groupPrefixes2.length
+          let listThreeLength = groupRoots.length
+          
+          let prefixOneIndex = Math.floor(Math.random() * Math.floor(listOneLength))
+          let prefixTwoIndex = Math.floor(Math.random() * Math.floor(listTwoLength))
+          let rootIndex = Math.floor(Math.random() * Math.floor(listThreeLength))
+  
+          let prefixOne = groupPrefixes[prefixOneIndex]
+          let prefixTwo = groupPrefixes2[prefixTwoIndex]
+          let root = groupRoots[rootIndex]
+  
+          let initGroupsDefaultTitle = prefixOne + ' ' + prefixTwo + ' ' + root
+          let groupsDefaultTitle = initGroupsDefaultTitle.trim()
+      
+          createGroup(groupsDefaultTitle, validUserEmails, this.props.userInfo.id,
+            response => {
+              groupList.push(response.data)
+              this.setState({ groupsInitUsers: '' })
+      
+              getUser(this.props.userInfo.id, getUserToken(),
+                response => {
+                  this.props.setUserInfo(response.data)
+                },
+                error => {
+                }
+              )
+            },
+            error => {
+            }
+          )
 
-        let prefixOne = groupPrefixes[prefixOneIndex]
-        let prefixTwo = groupPrefixes2[prefixTwoIndex]
-        let root = groupRoots[rootIndex]
-
-        let initGroupsDefaultTitle = prefixOne + ' ' + prefixTwo + ' ' + root
-        let groupsDefaultTitle = initGroupsDefaultTitle.trim()
-    
-        createGroup(groupsDefaultTitle, validUserEmails, this.props.userInfo.id,
-          response => {
-            groupList.push(response.data)
-            this.setState({ groupsInitUsers: '' })
-    
-            getUser(this.props.userInfo.id, getUserToken(),
-              response => {
-                this.props.setUserInfo(response.data)
-              },
-              error => {
-              }
-            )
-          },
-          error => {
-          }
-        )
-    
+        } else {
+          this.setState({ groupsInitUsers: '' })
+        }
 
       },
       error => {
