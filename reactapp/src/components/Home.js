@@ -259,7 +259,7 @@ class Home extends Component {
               <CardBody>
                 {!onHomePage && <h5 className="page-title2">Create Group</h5>}
                   <Form onSubmit={this.createNewGroup}>
-                    <input
+                    <input className='input'
                       name="groupsInitUsers"
                       placeholder="enter user(s)"
                       value={groupsInitUsers}
@@ -300,7 +300,7 @@ class Home extends Component {
                 </table> 
 
                 <Form onSubmit={this.postMsg}>
-                  <input className='msginput'
+                  <input className='msginput input'
                     name="newMessage"
                     placeholder="enter message"
                     value={newMessage}

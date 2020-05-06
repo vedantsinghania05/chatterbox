@@ -14,11 +14,14 @@
 @import './component/topbar';
 @import './component/load';
 @import './component/form';
-@import './component/messages';
 
 //pages...
 @import 'containers/account';
 
 //objects...
 @import 'objects/layout.scss';
+
+//other...
+@import './other/messages';
+@import './other/input';
 

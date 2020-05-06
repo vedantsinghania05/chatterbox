@@ -231,7 +231,7 @@ class ManageGroups extends Component {
               <CardBody>
 
                 <Form onSubmit={this.addMembers}>
-                  <input
+                  <input className='input'
                     name="newMember"
                     placeholder="add user to group"
                     value={newMember}
