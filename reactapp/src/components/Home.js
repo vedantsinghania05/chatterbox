@@ -282,11 +282,11 @@ class Home extends Component {
                 </div>}
 
                 <table>
-                {groupsMessages.map((message, index) => <tbody>
-                      <tr key={index}>
+                {groupsMessages.map((message, index) => <tbody key={index}>
+                      <tr>
                       <td className='poster'>{message.poster}</td>
                       </tr>
-                      <tr key={index}>
+                      <tr>
                       <td className='content'>{message.content}</td>
                       </tr>
                       
