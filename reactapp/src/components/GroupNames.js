@@ -1,5 +1,5 @@
 export const groupPrefixes = ['awesome', 'funny', 'orange', 'ruthless', 'brainy', 'happy', 'gluttonous',
-'snooty', 'tall', 'sad','blue', 'green', 'red', 'curly']
+'snooty', 'tall', 'sad','blue', 'green', 'red', 'titanium', 'slimy', 'dumb']
 
 
 

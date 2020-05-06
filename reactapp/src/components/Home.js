@@ -76,7 +76,6 @@ class Home extends Component {
         validUsers = response.data
 
         if (validUsers.length > 0) {
-          console.log('>>>>>', validUsers)
 
           for (let user of validUsers) {
             validUserEmails.push(user.email)
