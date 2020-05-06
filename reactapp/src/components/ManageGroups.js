@@ -106,21 +106,23 @@ class ManageGroups extends Component {
   updateGroupTitle = (e) => {
     e.preventDefault()
     const { newGroupTitle, groupInfo } = this.state;
-    updateTitleGroup(getUserToken(), groupInfo.id, newGroupTitle,
-      response => {
-        this.setState({ groupInfo: response.data })
-        
-        getUser(this.props.userInfo.id, getUserToken(),
+    if (newGroupTitle && newGroupTitle[0] !== ' ') {
+      updateTitleGroup(getUserToken(), groupInfo.id, newGroupTitle,
         response => {
-          this.props.setUserInfo(response.data)
+          this.setState({ groupInfo: response.data })
+          
+          getUser(this.props.userInfo.id, getUserToken(),
+          response => {
+            this.props.setUserInfo(response.data)
+          },
+          error => {
+          }
+        )
         },
         error => {
         }
       )
-      },
-      error => {
-      }
-    )
+    }
   }
 
   randomizeNewGroupTitle = () => {
@@ -231,7 +233,7 @@ class ManageGroups extends Component {
               <CardBody>
 
                 <Form onSubmit={this.addMembers}>
-                  <input
+                  <input className='input'
                     name="newMember"
                     placeholder="add user to group"
                     value={newMember}
