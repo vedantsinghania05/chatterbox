@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SidebarLink from './SidebarLink';
 import { connect } from 'react-redux';
-import { Form, Input } from 'reactstrap'
+import { Form, Input, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../../../../redux/containers/SignedInUserCtr';
 import { getUser, createGroup, getValidUsers } from '../../../../nodeserverapi'
 import { groupPrefixes, groupPrefixes2, groupRoots } from '../../../GroupNames';
@@ -10,7 +10,7 @@ import { groupPrefixes, groupPrefixes2, groupRoots } from '../../../GroupNames';
 class SidebarContent extends Component {
   constructor() {
     super();
-    this.state = { groupList: [], groupsInitUsers: [] };
+    this.state = { groupList: [], groupsInitUsers: [], toggle: false };
   }
   static propTypes = {
     onClick: PropTypes.func.isRequired,
@@ -117,8 +117,17 @@ class SidebarContent extends Component {
     onClick();
   };
 
+  toggleModal =() => {
+    const {toggle} = this.state
+    this.setState({toggle: !toggle})
+  
+  }
+  
+
+
+
   render() {
-    const { groupList, groupsInitUsers } = this.state;
+    const { groupList, groupsInitUsers, toggle } = this.state;
 
     return (
       <span>
@@ -126,15 +135,24 @@ class SidebarContent extends Component {
           {/*<ul className="sidebar__block">
             <SidebarLink title="Log Out" icon="exit" route="/signin" onClick={this.hideSidebar} />
           </ul>*/}
-          <Form onSubmit={this.createNewGroup}>
-            <Input bsSize='sm'
-              name="groupsInitUsers"
-              placeholder="enter user(s) for new group"
-              value={groupsInitUsers}
-              onChange={this.onChangeGroupsInitUsers}
-            />
-        </Form>
-        <hr/>
+          <Button onClick={this.toggleModal} size='sm' color="primary">Create Group</Button>
+            <Modal isOpen={toggle}>
+              <ModalHeader>Create Group</ModalHeader>
+              <ModalBody>
+                <Form onSubmit={this.createNewGroup}>
+                  <Input bsSize='sm'
+                  name="groupsInitUsers"
+                  placeholder="enter user(s) - hit enter to create"
+                  value={groupsInitUsers}
+                  onChange={this.onChangeGroupsInitUsers}
+                  />
+                </Form>
+              </ModalBody>
+              <ModalFooter>
+                <Button size='sm' color='primary' onClick={this.toggleModal}>Cancel</Button>
+              </ModalFooter>
+            </Modal>
+          <hr/>
           {groupList.map((group, index) => 
             <ul key={index} className='sidebar__block'>
               <SidebarLink key={index} title={group.title} to={{pathname:'/', state: {groupId: group._id}, backtoGroup: false}} onClick={this.hideSidebar} />
