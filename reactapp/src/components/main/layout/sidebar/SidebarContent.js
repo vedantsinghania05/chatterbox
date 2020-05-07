@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SidebarLink from './SidebarLink';
 import { connect } from 'react-redux';
-import { Form, Input, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
+import { Form, Input, Button, Modal, ModalHeader, ModalBody, ModalFooter, Row, Col } from 'reactstrap'
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../../../../redux/containers/SignedInUserCtr';
 import { getUser, createGroup, getValidUsers } from '../../../../nodeserverapi'
 import { groupPrefixes, groupPrefixes2, groupRoots } from '../../../GroupNames';
@@ -135,7 +135,14 @@ class SidebarContent extends Component {
           {/*<ul className="sidebar__block">
             <SidebarLink title="Log Out" icon="exit" route="/signin" onClick={this.hideSidebar} />
           </ul>*/}
-          <Button onClick={this.toggleModal} size='sm' color="primary">Create Group</Button>
+          <Row>
+            <Col md={6}>
+              <ul className='bob'>Groups</ul>
+            </Col>
+            <Col md='auto'>
+            <Button size="sm" onClick={this.toggleModal} color="primary">+</Button>
+            </Col>
+          </Row>
             <Modal isOpen={toggle}>
               <ModalHeader>Create Group</ModalHeader>
               <ModalBody>
@@ -152,9 +159,8 @@ class SidebarContent extends Component {
                 <Button size='sm' color='primary' onClick={this.toggleModal}>Cancel</Button>
               </ModalFooter>
             </Modal>
-          <hr/>
           {groupList.map((group, index) => 
-            <ul key={index} className='sidebar__block'>
+            <ul key={index}>
               <SidebarLink key={index} title={group.title} to={{pathname:'/', state: {groupId: group._id}, backtoGroup: false}} onClick={this.hideSidebar} />
             </ul>
           )}  
