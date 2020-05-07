@@ -276,7 +276,7 @@
 
     &.sidebar--collapse {
       width: 60px;
-      overflow: hidden;
+      overflow: visible;
 
       .sidebar__scroll, .sidebar__content {
         width: 60px;
