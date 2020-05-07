@@ -275,11 +275,11 @@
     }
 
     &.sidebar--collapse {
-      width: 55px;
+      width: 60px;
       overflow: visible;
 
       .sidebar__scroll, .sidebar__content {
-        width: 55px;
+        width: 60px;
         overflow: visible !important;
         transition: width 0.3s;
       }
