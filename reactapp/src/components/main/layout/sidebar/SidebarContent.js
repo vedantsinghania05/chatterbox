@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SidebarLink from './SidebarLink';
 import { connect } from 'react-redux';
-import { Form, Card, CardTitle } from 'reactstrap'
+import { Form, Input } from 'reactstrap'
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../../../../redux/containers/SignedInUserCtr';
 import { getUser, createGroup, getValidUsers } from '../../../../nodeserverapi'
 import { groupPrefixes, groupPrefixes2, groupRoots } from '../../../GroupNames';
@@ -122,27 +122,21 @@ class SidebarContent extends Component {
 
     return (
       <span>
-        <div>
-          <Card color='blue'>
-            <CardTitle>Create Group</CardTitle>
-            <Form onSubmit={this.createNewGroup}>
-              <input className='input'
-                name="groupsInitUsers"
-                placeholder="enter user(s)"
-                value={groupsInitUsers}
-                onChange={this.onChangeGroupsInitUsers}
-              />
-            </Form>
-          </Card>
-        </div>
-        <hr></hr>
         <div className="sidebar__content">
           {/*<ul className="sidebar__block">
             <SidebarLink title="Log Out" icon="exit" route="/signin" onClick={this.hideSidebar} />
           </ul>*/}
-
+          <Form onSubmit={this.createNewGroup}>
+            <Input bsSize='sm'
+              name="groupsInitUsers"
+              placeholder="enter user(s) for new group"
+              value={groupsInitUsers}
+              onChange={this.onChangeGroupsInitUsers}
+            />
+        </Form>
+        <hr/>
           {groupList.map((group, index) => 
-            <ul key={index} className="sidebar__block">
+            <ul key={index} className='sidebar__block'>
               <SidebarLink key={index} title={group.title} to={{pathname:'/', state: {groupId: group._id}, backtoGroup: false}} onClick={this.hideSidebar} />
             </ul>
           )}  

@@ -90,6 +90,7 @@
 
   @include themify($themes) {
     border-bottom: 1px solid themed('colorBorder');
+    padding-bottom: 12px;
   }
 
   &:last-child {
