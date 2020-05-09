@@ -137,10 +137,10 @@ class SidebarContent extends Component {
           </ul>*/}
           <Row>
             <Col md={6}>
-              <ul className='bob'>Groups</ul>
+              <h5 className='bob'>Groups</h5>
             </Col>
             <Col md='auto'>
-            <Button size="sm" onClick={this.toggleModal} color="primary">+</Button>
+              <Button size="sm" onClick={this.toggleModal} color="primary">+</Button>
             </Col>
           </Row>
             <Modal isOpen={toggle}>
