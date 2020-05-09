@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
-import { Col, Container, Row, Card, CardBody, Button, Form, InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import { Col, Container, Row, Card, CardBody, Button, Form, InputGroup, InputGroupAddon, Input, ButtonGroup } from 'reactstrap';
 import { getGroupInfo, getMember, updateTitleGroup, updateMembersGroup, getUser, deleteGroup, deleteGroupsMessage, updateCreatorGroup, getValidUsers } from '../nodeserverapi'
-import { Link } from 'react-router-dom'
 import { groupPrefixes, groupPrefixes2, groupRoots } from './GroupNames';
+import { Redirect } from 'react-router-dom'
+
 
 class ManageGroups extends Component {
   constructor() {
     super();
-    this.state = { groupsMembers: [], groupInfo: undefined, newMember: '', newGroupTitle: '' };
+    this.state = { groupsMembers: [], groupInfo: undefined, newMember: '', newGroupTitle: '', 
+    confirm: false, redirect: false, confirm1: false, redirect1: false };
 	}
 	
 	componentDidMount = () => {
-
     getGroupInfo(getUserToken(), this.props.location.state.groupId,
       response => {
         let groupInfo = response.data
@@ -165,6 +166,7 @@ class ManageGroups extends Component {
     deleteGroup(getUserToken(), groupInfo.id,
       response => {
         this.removeGroupsMessages()
+        this.setState({redirect: true})
         getUser(this.props.userInfo.id, getUserToken(),
           response => {
             this.props.setUserInfo(response.data)
@@ -201,14 +203,25 @@ class ManageGroups extends Component {
           error => {
           }
         )
+        this.setState({redirect1: true})
       },
       error => {
       }
     )
   }
 
+  confirmBool = () => {
+    const {confirm} = this.state
+    this.setState({confirm: !confirm})
+  }
+
+  confirmBool1 = () => {
+    const {confirm1} = this.state
+    this.setState({confirm1: !confirm1})
+  }
+
   render() {
-		const { groupsMembers, newMember, newGroupTitle, groupInfo } = this.state;
+		const { groupsMembers, newMember, newGroupTitle, groupInfo, confirm, redirect, redirect1, confirm1 } = this.state;
 
     return (
       <Container className="dashboard">
@@ -248,11 +261,19 @@ class ManageGroups extends Component {
                     {groupsMembers.map((member, index) => <tr key={index}>
                       <td>{groupInfo.creator !== member.id ? <Button color='primary' onClick={()=>this.deleteGroupMember(member, index)}>x</Button> : <Button disabled>x</Button>}</td>
                       <td>{member.email}</td>
-                      {groupInfo.creator !== member.id ? <td><Link onClick={()=>this.updateGroupCreator(member, index)} to='/'><Button color='primary' size='sm'>Make Admin</Button></Link></td> : <td></td>}
+                      {groupInfo.creator !== member.id && !confirm1 && <td><Button onClick={this.confirmBool1} color='primary' size='sm'>Make Admin</Button></td>}
+                      {groupInfo.creator !== member.id && confirm1 && <td><ButtonGroup size='sm'>
+                        <Button onClick={()=>this.updateGroupCreator(member, index)} color='danger'>{redirect1 && <Redirect to='/' />}Confirm</Button>
+                        <Button onClick={this.confirmBool1} color='primary'>Cancel</Button> 
+                      </ButtonGroup></td>}
                     </tr>)}
                   </tbody>	
                 </table>	
-                <Link to='/' onClick={this.removeGroup}>Delete Group</Link>
+                {!confirm && <Button onClick={this.confirmBool} size='sm' color='primary'>Delete Group</Button>}
+                {confirm && <ButtonGroup size='sm'>
+                  <Button onClick={this.removeGroup} color='danger'>{redirect && <Redirect to='/' />}Confirm</Button>
+                  <Button onClick={this.confirmBool} color='primary'>Cancel</Button> 
+                </ButtonGroup>}
               </CardBody>
             </Card>
           </Col>

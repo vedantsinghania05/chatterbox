@@ -2,19 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
-import { Col, Row, Card, CardBody, Button, Form, Container } from 'reactstrap';
+import { Col, Row, Card, CardBody, Button, Form, Container, ButtonGroup } from 'reactstrap';
 import { createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, countGroupsMessage } from '../nodeserverapi'
+import { Redirect } from 'react-router-dom'
 
 class Home extends Component {
   constructor() {
     super();
     this.state = { onHomePage: true, groupsInitUsers: '', groupList: [], selectedGroup: undefined, 
     newMemberUsername: '', newMessage: '', groupsMessages: [], pageNo: 1, sameId: undefined, 
-    isCreator: true, messageCount: undefined, reset: false };
+    isCreator: true, messageCount: undefined, reset: false, confirm: false, redirect: false };
   }
 
   componentDidMount = () => {
-
     if (this.props.location.state) {
       const { groupId } = this.props.location.state
       this.getGroup(groupId)
@@ -150,6 +150,8 @@ class Home extends Component {
     if (selectedGroup.creator !== userInfo.id) {
     updateMembersGroup(getUserToken(), selectedGroup.id, false, userInfo.email,
       response => {
+        this.setState({redirect: true})
+        this.setState({redirect: false, confirm: false})
         getUser(this.props.userInfo.id, getUserToken(),
           response => {
             this.props.setUserInfo(response.data)
@@ -165,8 +167,13 @@ class Home extends Component {
     }
   }
 
+  confirmBool = () => {
+    const {confirm} = this.state
+    this.setState({confirm: !confirm})
+  }
+
   render() {
-    const { onHomePage, newMessage, groupsMessages, selectedGroup, reset, messageCount, pageNo } = this.state;
+    const { onHomePage, newMessage, groupsMessages, selectedGroup, reset, messageCount, pageNo, confirm, redirect} = this.state;
 
     return (
       <Container className="dashboard">
@@ -179,7 +186,11 @@ class Home extends Component {
 
                 <Row md='auto'>
                   <Col md='auto'><h5 className="page-title2">{selectedGroup ? selectedGroup.title : ''}</h5></Col>
-                  {!this.state.isCreator && !onHomePage && <Col ><Button color='primary' size='sm' onClick={this.leaveGroup}>Leave Group</Button></Col>}
+                  {!this.state.isCreator && !onHomePage && !confirm && <Col ><Button color='primary' size='sm' onClick={this.confirmBool}>Leave Group</Button></Col>}
+                  {!this.state.isCreator && !onHomePage && confirm && <Col><ButtonGroup size='sm'>
+                    <Button onClick={this.leaveGroup} color='danger'>{redirect && <Redirect to='/' />}Confirm</Button>
+                    <Button onClick={this.confirmBool} color='primary'>Cancel</Button> 
+                  </ButtonGroup></Col>}
                   {selectedGroup && this.state.isCreator && <Col><Link to={{pathname:'/manage', state: {groupId: selectedGroup.id}}}><Button color='primary' size='sm'>Manage</Button></Link></Col>}
                 </Row>
 
