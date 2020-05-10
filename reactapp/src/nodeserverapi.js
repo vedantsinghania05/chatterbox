@@ -121,6 +121,14 @@ export const getGroupInfo = (token, groupId, successCbk, errorCbk) => {
   .catch(errorCbk)
 }
 
+export const getFirstGroup = (token, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/groups/first',
+    { headers: { Authorization: 'Bearer ' + token } }
+  )
+  .then(successCbk)
+  .catch(errorCbk)
+}
+
 export const updateTitleGroup = (token, groupId, title, successCbk, errorCbk) => {
   axiosInstance.put(nodeserverUrl + '/groups/' + groupId + '/title',
     {

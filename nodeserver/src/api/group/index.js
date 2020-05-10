@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { master, token } from '../../services/passport'
-import { create, getGroupsForUser, getGroupInfo, getGroupMembers, updateGroupTitle, updateGroupMembers, destroy, updateGroupCreator } from './controller'
+import { create, getGroupsForUser, getGroupInfo, getGroupMembers, getFirstGroupInfo, updateGroupTitle, updateGroupMembers, destroy, updateGroupCreator } from './controller'
 import { schema } from './model'
 export Group, { schema } from './model'
 
@@ -13,6 +13,10 @@ router.post('/',
 router.get('/user',
   token({ required: true }),
   getGroupsForUser)
+
+router.get('/first',
+  token({ required: true }),
+  getFirstGroupInfo)
   
 router.get('/:id',
   token({ required: true }),

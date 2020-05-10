@@ -3,23 +3,26 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Row, Card, CardBody, Button, Form, Container, ButtonGroup } from 'reactstrap';
-import { createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, countGroupsMessage } from '../nodeserverapi'
+import { createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, countGroupsMessage, getFirstGroup } from '../nodeserverapi'
 import { Redirect } from 'react-router-dom'
 
 class Home extends Component {
   constructor() {
     super();
-    this.state = { onHomePage: true, groupsInitUsers: '', groupList: [], selectedGroup: undefined, 
+    this.state = { groupsInitUsers: '', groupList: [], selectedGroup: undefined, 
     newMemberUsername: '', newMessage: '', groupsMessages: [], pageNo: 1, sameId: undefined, 
     isCreator: true, messageCount: undefined, reset: false, confirm: false, redirect: false };
   }
 
   componentDidMount = () => {
+
     if (this.props.location.state) {
       const { groupId } = this.props.location.state
       this.getGroup(groupId)
       this.getGroupMessages(groupId, 1)
-      this.setState({onHomePage: this.props.location.backToGroup, pageNo: 1})
+      this.setState({pageNo: 1})
+    } else {
+      this.getFirstGroupInfo()
     }
 
   }
@@ -33,8 +36,23 @@ class Home extends Component {
     if (newGroupId && newGroupId!==oldGroupId) {
       this.getGroup(newGroupId)
       this.getGroupMessages(newGroupId, 1)
-      this.setState({ onHomePage: false, pageNo: 1, reset: false })
+      this.setState({ pageNo: 1, reset: false })
     }
+  }
+
+  getFirstGroupInfo = () => {
+    getFirstGroup(getUserToken(),
+      response => {
+        this.getGroupMessages(response.data.id, 1)
+
+        this.setState({ selectedGroup: response.data })
+        if (response.data.creator !== this.props.userInfo.id) {
+          this.setState({isCreator: false})
+        } else this.setState({isCreator: true})
+      },
+      error => {
+      }
+    )
   }
 
   getGroup = (groupId) => {
@@ -155,7 +173,7 @@ class Home extends Component {
         getUser(this.props.userInfo.id, getUserToken(),
           response => {
             this.props.setUserInfo(response.data)
-            this.setState({selectedGroup: undefined, onHomePage: true})
+            this.setState({selectedGroup: undefined })
           },
           error => {
           }
@@ -173,21 +191,21 @@ class Home extends Component {
   }
 
   render() {
-    const { onHomePage, newMessage, groupsMessages, selectedGroup, reset, messageCount, pageNo, confirm, redirect} = this.state;
+    const { newMessage, groupsMessages, selectedGroup, reset, messageCount, pageNo, confirm, redirect} = this.state;
 
     return (
       <Container className="dashboard">
-        {onHomePage && <h3 className="page-title">Home</h3>}
+        <h3 className="page-title">{selectedGroup && selectedGroup.title}</h3>
 
-        {!onHomePage && <Row>
+        <Row>
           <Col md={12}>
             <Card>
               <CardBody>
 
                 <Row md='auto'>
                   <Col md='auto'><h5 className="page-title2">{selectedGroup ? selectedGroup.title : ''}</h5></Col>
-                  {!this.state.isCreator && !onHomePage && !confirm && <Col ><Button color='primary' size='sm' onClick={this.confirmBool}>Leave Group</Button></Col>}
-                  {!this.state.isCreator && !onHomePage && confirm && <Col><ButtonGroup size='sm'>
+                  {!this.state.isCreator && !confirm && <Col ><Button color='primary' size='sm' onClick={this.confirmBool}>Leave Group</Button></Col>}
+                  {!this.state.isCreator && confirm && <Col><ButtonGroup size='sm'>
                     <Button onClick={this.leaveGroup} color='danger'>{redirect && <Redirect to='/' />}Confirm</Button>
                     <Button onClick={this.confirmBool} color='primary'>Cancel</Button> 
                   </ButtonGroup></Col>}
@@ -222,7 +240,7 @@ class Home extends Component {
               </CardBody>
             </Card>
           </Col>
-        </Row>}
+        </Row>
 
       </Container>
     );
