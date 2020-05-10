@@ -57,6 +57,14 @@ export const getGroupInfo = ({ params }, res, next) => {
     .catch(next)
 }
 
+export const getFirstGroupInfo = ({ user }, res, next) => {
+  Group.find({ members: user.id })
+    .then(groups => {
+      if (!groups || !groups[0]) return next(resInternal('Faled to find groups'))
+      return resOk(res, groups[0].view(true));
+    })
+}
+
 export const updateGroupTitle = ({ params, body }, res, next) => {
   Group.findById(params.id)
     .then(group => {
