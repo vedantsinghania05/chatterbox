@@ -195,8 +195,6 @@ class Home extends Component {
 
     return (
       <Container className="dashboard">
-        <h3 className="page-title">{selectedGroup && selectedGroup.title}</h3>
-
         <Row>
           <Col md={12}>
             <Card>
