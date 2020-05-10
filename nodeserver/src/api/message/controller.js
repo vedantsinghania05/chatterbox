@@ -17,14 +17,10 @@ export const create = ({ body }, res, next) => {
 }
 
 export const getMessages = ({ query }, res, next) => {
-  let { group, skipCount } = query
-
-  skipCount = Number(skipCount)
+  let { group } = query
 
   return Message.find({ group: group })
     .sort('-createdAt')
-    .limit(10)
-    .skip(skipCount)
     .then(messages => {
       return populateManyPosters(messages);
     })
@@ -44,12 +40,3 @@ export const deleteGroupsMessages = ({ params }, res, next) => {
     .catch(next)
 }
 
-export const countGroupsMessages =({ params }, res, next) => {
-  Message.countDocuments({ group: params.id })
-  .then(messages => {
-    if (!messages && messages != 0) return next(resInternal('Failed to count messages'))
-    // return console.log(">>>>>>>", messages)
-    return resOk(res, messages)
-  })
-  .catch(next)
-}
