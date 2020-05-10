@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
-import { Col, Row, Card, CardBody, Button, Form, Container, ButtonGroup } from 'reactstrap';
+import { Col, Row, Card, CardBody, Button, Form, Container, CardTitle, ButtonGroup } from 'reactstrap';
 import { createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, getFirstGroup } from '../nodeserverapi'
 import { Redirect } from 'react-router-dom'
 import Scrollbar from 'react-smooth-scrollbar';
@@ -45,12 +45,17 @@ class Home extends Component {
   getFirstGroupInfo = () => {
     getFirstGroup(getUserToken(),
       response => {
-        this.getGroupMessages(response.data.id)
+        console.log('>>>>>>', response.data)
+        if (response.data) {
+          this.getGroupMessages(response.data.id) 
 
-        this.setState({ selectedGroup: response.data })
-        if (response.data.creator !== this.props.userInfo.id) {
-          this.setState({isCreator: false})
-        } else this.setState({isCreator: true})
+          this.setState({ selectedGroup: response.data })
+          if (response.data.creator !== this.props.userInfo.id) {
+            this.setState({isCreator: false})
+          } else this.setState({isCreator: true})
+        } else {
+          this.setState({ selectedGroup: 'none' })
+        }
       },
       error => {
       }
@@ -159,7 +164,7 @@ class Home extends Component {
       <Container className="dashboard">
         <Row>
           <Col md={12}>
-            <Card>
+            {selectedGroup !== 'none' && <Card>
               <CardBody>
 
                 <Row md='auto'>
@@ -194,7 +199,11 @@ class Home extends Component {
                 </Form>
 
               </CardBody>
-            </Card>
+            </Card>}
+            {selectedGroup === 'none' && <Card>
+              <CardTitle>You have no groups</CardTitle>
+              <br/>
+            </Card>}
           </Col>
         </Row>
 

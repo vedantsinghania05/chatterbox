@@ -60,7 +60,7 @@ export const getGroupInfo = ({ params }, res, next) => {
 export const getFirstGroupInfo = ({ user }, res, next) => {
   Group.find({ members: user.id })
     .then(groups => {
-      if (!groups || !groups[0]) return next(resInternal('Faled to find groups'))
+      if (!groups || !groups[0]) return resOk(res, undefined)
       return resOk(res, groups[0].view(true));
     })
 }

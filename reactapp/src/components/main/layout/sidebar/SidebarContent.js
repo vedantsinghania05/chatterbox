@@ -37,49 +37,60 @@ class SidebarContent extends Component {
     e.preventDefault()
     const { groupsInitUsers, groupList } = this.state;
     let emailsToAdd = this.parseForUserEmails(groupsInitUsers)
-    let validUserEmails = []
-    let validUsers = []
-    getValidUsers(getUserToken(), emailsToAdd,
-      response => {
-        validUsers = response.data
-        if (validUsers.length > 0) {
-          for (let user of validUsers) {
-            validUserEmails.push(user.email)
-          }
-          validUserEmails.unshift(this.props.userInfo.email)
-          let listOneLength = groupPrefixes.length
-          let listTwoLength = groupPrefixes2.length
-          let listThreeLength = groupRoots.length
-          let prefixOneIndex = Math.floor(Math.random() * Math.floor(listOneLength))
-          let prefixTwoIndex = Math.floor(Math.random() * Math.floor(listTwoLength))
-          let rootIndex = Math.floor(Math.random() * Math.floor(listThreeLength))
-          let prefixOne = groupPrefixes[prefixOneIndex]
-          let prefixTwo = groupPrefixes2[prefixTwoIndex]
-          let root = groupRoots[rootIndex]
-          let initGroupsDefaultTitle = prefixOne + ' ' + prefixTwo + ' ' + root
-          let groupsDefaultTitle = initGroupsDefaultTitle.trim()
-          createGroup(groupsDefaultTitle, validUserEmails, this.props.userInfo.id,
-            response => {
-              groupList.push(response.data)
-              this.setState({ groupsInitUsers: "" })
-              getUser(this.props.userInfo.id, getUserToken(),
-                response => {
-                  this.props.setUserInfo(response.data)
-                },
-                error => {
-                }
-              )
-            },
-            error => {
-            }
-          )
-        } else {
-          this.setState({ groupsInitUsers: "" })
-        }
-      },
-      error => {
+    
+    let emailIndex = 0
+    for (let email of emailsToAdd) {
+      if (email === this.props.userInfo.email) {
+        emailsToAdd.splice(emailIndex, 1)
       }
-    )
+      emailIndex++
+    }
+    if (emailsToAdd.length !== 0) {
+
+      let validUserEmails = []
+      let validUsers = []
+      getValidUsers(getUserToken(), emailsToAdd,
+        response => {
+          validUsers = response.data
+          if (validUsers.length > 0) {
+            for (let user of validUsers) {
+              validUserEmails.push(user.email)
+            }
+            validUserEmails.unshift(this.props.userInfo.email)
+            let listOneLength = groupPrefixes.length
+            let listTwoLength = groupPrefixes2.length
+            let listThreeLength = groupRoots.length
+            let prefixOneIndex = Math.floor(Math.random() * Math.floor(listOneLength))
+            let prefixTwoIndex = Math.floor(Math.random() * Math.floor(listTwoLength))
+            let rootIndex = Math.floor(Math.random() * Math.floor(listThreeLength))
+            let prefixOne = groupPrefixes[prefixOneIndex]
+            let prefixTwo = groupPrefixes2[prefixTwoIndex]
+            let root = groupRoots[rootIndex]
+            let initGroupsDefaultTitle = prefixOne + ' ' + prefixTwo + ' ' + root
+            let groupsDefaultTitle = initGroupsDefaultTitle.trim()
+            createGroup(groupsDefaultTitle, validUserEmails, this.props.userInfo.id,
+              response => {
+                groupList.push(response.data)
+                this.setState({ groupsInitUsers: "" })
+                getUser(this.props.userInfo.id, getUserToken(),
+                  response => {
+                    this.props.setUserInfo(response.data)
+                  },
+                  error => {
+                  }
+                )
+              },
+              error => {
+              }
+            )
+          } else {
+            this.setState({ groupsInitUsers: "" })
+          }
+        },
+        error => {
+        }
+      )
+    }
   }
   parseForUserEmails = (emailsString) => {
     let emailsList = emailsString.split(/[ ,]+/)
@@ -122,7 +133,7 @@ class SidebarContent extends Component {
               </Form>
             </ModalBody>
             <ModalFooter>
-              <Button size="sm" color="primary" onClick={this.toggleModal}>Done</Button>
+              <Button size="sm" color="primary" onClick={this.toggleModal}>Cancel</Button>
             </ModalFooter>
           </Modal>
           {/*<ul className=“sidebar__block”>
