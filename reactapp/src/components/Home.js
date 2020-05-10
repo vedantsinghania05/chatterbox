@@ -45,7 +45,7 @@ class Home extends Component {
   getFirstGroupInfo = () => {
     getFirstGroup(getUserToken(),
       response => {
-        this.getGroupMessages(response.data.id, 1)
+        this.getGroupMessages(response.data.id)
 
         this.setState({ selectedGroup: response.data })
         if (response.data.creator !== this.props.userInfo.id) {
@@ -99,7 +99,7 @@ class Home extends Component {
     if (newMessage && newMessage[0] !== ' ') {
       createMessage(this.props.userInfo.id, selectedGroup.id, newMessage,
         response => {
-          this.getGroupMessages(selectedGroup.id, 0)
+          this.getGroupMessages(selectedGroup.id)
           this.setState({ newMessage: '' })     
         },
         error => {
