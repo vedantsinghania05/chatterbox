@@ -121,7 +121,7 @@ class SidebarContent extends Component {
           </Col>
         </Row>
           <Modal isOpen={toggle}>
-            <ModalHeader>Create Group</ModalHeader>
+            <ModalHeader toggle={this.toggleModal}>Create Group</ModalHeader>
             <ModalBody>
               <Form onSubmit={this.createNewGroup}>
                 <Input bsSize="sm"
@@ -133,7 +133,7 @@ class SidebarContent extends Component {
               </Form>
             </ModalBody>
             <ModalFooter>
-              <Button size="sm" color="primary" onClick={this.toggleModal}>Cancel</Button>
+              <Button size="sm" color="primary" onClick={this.toggleModal}>Done</Button>
             </ModalFooter>
           </Modal>
           {/*<ul className=“sidebar__block”>

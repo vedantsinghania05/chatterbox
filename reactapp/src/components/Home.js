@@ -45,7 +45,6 @@ class Home extends Component {
   getFirstGroupInfo = () => {
     getFirstGroup(getUserToken(),
       response => {
-        console.log('>>>>>>', response.data)
         if (response.data) {
           this.getGroupMessages(response.data.id) 
 
@@ -164,8 +163,11 @@ class Home extends Component {
       <Container className="dashboard">
         <Row>
           <Col md={12}>
-            {selectedGroup !== 'none' && <Card>
-              <CardBody>
+            <Card>
+              
+              {selectedGroup === 'none' && <CardTitle>Click + to create your first group</CardTitle>}
+
+              {selectedGroup !== 'none' && <CardBody>
 
                 <Row md='auto'>
                   <Col md='auto'><h5 className="page-title2">{selectedGroup ? selectedGroup.title : ''}</h5></Col>
@@ -189,6 +191,7 @@ class Home extends Component {
                     </tbody>)}
                   </table> 
                 </Scrollbar >
+
                 <Form onSubmit={this.postMsg}>
                   <input className='msginput input'
                     name="newMessage"
@@ -198,15 +201,11 @@ class Home extends Component {
                   />                    
                 </Form>
 
-              </CardBody>
-            </Card>}
-            {selectedGroup === 'none' && <Card>
-              <CardTitle>You have no groups</CardTitle>
-              <br/>
-            </Card>}
+              </CardBody>}
+
+            </Card>
           </Col>
         </Row>
-
       </Container>
     );
   }
