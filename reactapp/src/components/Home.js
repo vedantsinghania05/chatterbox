@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { signedInUserMstp, signedInUserMdtp, getUserToken } from '../redux/containers/SignedInUserCtr';
 import { Col, Row, Card, CardBody, Button, Form, Container, CardTitle, ButtonGroup } from 'reactstrap';
-import { createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, getFirstGroup } from '../nodeserverapi'
+import { createMessage, getMessages, getGroupInfo, getUser, updateMembersGroup, getFirstGroup, countGroupsMessage } from '../nodeserverapi'
 import { Redirect } from 'react-router-dom'
 import Scrollbar from 'react-smooth-scrollbar';
 
@@ -13,7 +13,7 @@ class Home extends Component {
     super();
     this.state = {groupsInitUsers: '', groupList: [], selectedGroup: undefined, 
     newMemberUsername: '', newMessage: '', groupsMessages: [], sameId: undefined, 
-    isCreator: true, confirm: false, redirect: false };
+    isCreator: true, confirm: false, redirect: false, pageNo: 1, messageCount: undefined, reset: false };
   }
 
 
@@ -22,7 +22,8 @@ class Home extends Component {
     if (this.props.location.state) {
       const { groupId } = this.props.location.state
       this.getGroup(groupId)
-      this.getGroupMessages(groupId)
+      this.getGroupMessages(groupId, 1)
+      this.setState({pageNo: 1})
     } else {
       this.getFirstGroupInfo()
     }
@@ -37,8 +38,8 @@ class Home extends Component {
 
     if (newGroupId && newGroupId!==oldGroupId) {
       this.getGroup(newGroupId)
-      this.getGroupMessages(newGroupId)
-      this.setState({ onHomePage: false })
+      this.getGroupMessages(newGroupId, 1)
+      this.setState({ pageNo: 1, reset: false })
     }
   }
 
@@ -79,9 +80,27 @@ class Home extends Component {
     this.setState({ newMessage: e.target.value })
   }
 
-  getGroupMessages = (groupId) => {
+  getGroupMessages = (groupId, newPageNo) => {
+    const { pageNo, messageCount } = this.state;
+    let skipCount;
+    countGroupsMessage(getUserToken(), groupId, 
+      response => {
+        this.setState({messageCount: response.data})
+      },
+      error => {
+      }
+    )
 
-    getMessages(getUserToken(), groupId,
+    if (newPageNo) {
+      skipCount = newPageNo * 50
+    } else {
+      skipCount = pageNo * 50
+    }
+    if (skipCount > messageCount && messageCount) {
+      this.setState({reset: true})
+    }
+
+    getMessages(getUserToken(), groupId, skipCount-50,
       response => {
         
         let tempGroupsMessages = []
@@ -97,10 +116,32 @@ class Home extends Component {
     )
   }
 
+  pageNoChanger = (shouldIncrease) => {
+    const { pageNo, sameId, reset } = this.state;
+    let newPageNo = pageNo;
+    
+    if (shouldIncrease) {
+      newPageNo = pageNo + 1
+    } else {
+      if (pageNo > 1) {
+        newPageNo = pageNo - 1
+      }
+    }
+
+    if (reset) {
+      this.setState({reset: false})
+    }
+
+    this.getGroupMessages(sameId, newPageNo)
+    this.setState({ pageNo: newPageNo })
+  }
+
+
   postMsg = (e) => {
     e.preventDefault()
     const { selectedGroup, newMessage } = this.state;
     if (newMessage && newMessage[0] !== ' ') {
+      this.setState({pageNo: 1, reset: false})
       createMessage(this.props.userInfo.id, selectedGroup.id, newMessage,
         response => {
           this.getGroupMessages(selectedGroup.id)
@@ -157,7 +198,7 @@ class Home extends Component {
   }
 
   render() {
-    const {newMessage, groupsMessages, selectedGroup, confirm, redirect} = this.state;
+    const {newMessage, groupsMessages, selectedGroup, confirm, redirect, reset, messageCount, pageNo} = this.state;
 
     return (
       <Container className="dashboard">
@@ -180,6 +221,10 @@ class Home extends Component {
                 </Row>
 
                 <Scrollbar className='sidebar__scroll1'>
+                  {messageCount > 50 && <div>
+                  {reset ? <Button disabled size='sm' >{'<'}</Button> : <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>}
+                  {pageNo === 1 ? <Button disabled size='sm' >{'>'}</Button> : <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>}
+                  </div>}
                   <table>
                     {groupsMessages.map((message, index) => <tbody key={index}>
                       <tr>

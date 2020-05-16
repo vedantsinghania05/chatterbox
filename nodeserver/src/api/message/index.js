@@ -18,4 +18,8 @@ router.delete('/:id',
   token({ required: true }),
   deleteGroupsMessages)
 
+router.get('/:id/count',
+  token ({ required: true }),
+  countGroupsMessages)
+
 export default router

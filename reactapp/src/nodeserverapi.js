@@ -186,8 +186,8 @@ export const createMessage = (poster, group, content, successCbk, errorCbk) => {
   .catch(errorCbk)
 }
 
-export const getMessages = (token, group, successCbk, errorCbk) => {
-  axiosInstance.get(nodeserverUrl + '/messages?group=' + group,
+export const getMessages = (token, group, skipCount, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/messages?group=' + group + '&skipCount=' + skipCount,
     { headers: { Authorization: 'Bearer ' + token } }
   )
   .then(successCbk)
@@ -201,3 +201,11 @@ export const deleteGroupsMessage = (token, groupId, successCbk, errorCbk) => {
   .then(successCbk)
   .catch(errorCbk)
 }
+
+export const countGroupsMessage = (token, groupId, successCbk, errorCbk) => {
+  axiosInstance.get(nodeserverUrl + '/messages/' + groupId + '/count',
+    { headers: { Authorization: 'Bearer ' + token } }
+  )
+  .then(successCbk)
+  .catch(errorCbk);
+   }
