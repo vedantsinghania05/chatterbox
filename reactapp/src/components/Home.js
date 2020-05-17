@@ -31,15 +31,22 @@ class Home extends Component {
   }
 
   componentDidUpdate = (prevProps) => {
-    const { location } = this.props
+    const { location, userInfo } = this.props
+    const { selectedGroup } = this.state
 
     let newGroupId = location.state ? location.state.groupId : undefined
     let oldGroupId = prevProps.location.state ? prevProps.location.state.groupId : undefined
 
-    if (newGroupId && newGroupId!==oldGroupId) {
+    if (newGroupId && newGroupId !== oldGroupId) {
       this.getGroup(newGroupId)
       this.getGroupMessages(newGroupId, 1)
       this.setState({ pageNo: 1, reset: false })
+    }
+
+    console.log('selectedGroup, userInfo groupLength', selectedGroup, userInfo.groups.length)
+
+    if (selectedGroup === 'none' && userInfo.groups.length > 0) {
+      this.getFirstGroupInfo()
     }
   }
 

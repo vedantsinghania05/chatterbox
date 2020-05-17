@@ -33,6 +33,7 @@ class SidebarContent extends Component {
   onChangeGroupsInitUsers = (e) => {
     this.setState({ groupsInitUsers: e.target.value })
   }
+
   createNewGroup = (e) => {
     e.preventDefault()
     const { groupsInitUsers, groupList } = this.state;
@@ -133,7 +134,8 @@ class SidebarContent extends Component {
               </Form>
             </ModalBody>
             <ModalFooter>
-              <Button size="sm" color="primary" onClick={this.toggleModal}>Done</Button>
+              <Button size="sm" color="primary" onClick={this.createNewGroup}>Submit</Button>   
+              <Button size="sm" color="primary" onClick={this.toggleModal}>Cancel</Button>
             </ModalFooter>
           </Modal>
           {/*<ul className=“sidebar__block”>
