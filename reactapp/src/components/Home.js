@@ -227,11 +227,12 @@ class Home extends Component {
                   {selectedGroup && this.state.isCreator && <Col><Link to={{pathname:'/manage', state: {groupId: selectedGroup.id}}}><Button color='primary' size='sm'>Manage</Button></Link></Col>}
                 </Row>
 
-                <Scrollbar className='sidebar__scroll1'>
-                  {messageCount > 50 && <div>
+                {messageCount > 50 && <div>
                   {reset ? <Button disabled size='sm' >{'<'}</Button> : <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>}
                   {pageNo === 1 ? <Button disabled size='sm' >{'>'}</Button> : <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>}
-                  </div>}
+                </div>}
+
+                <Scrollbar className='sidebar__scroll1'>
                   <table>
                     {groupsMessages.map((message, index) => <tbody key={index}>
                       <tr>
