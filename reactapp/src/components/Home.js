@@ -43,7 +43,7 @@ class Home extends Component {
       this.setState({ pageNo: 1, reset: false })
     }
 
-    console.log('selectedGroup, userInfo groupLength', selectedGroup, userInfo.groups.length)
+    //console.log('selectedGroup, userInfo groupLength', selectedGroup, userInfo.groups.length)
 
     if (selectedGroup === 'none' && userInfo.groups.length > 0) {
       this.getFirstGroupInfo()

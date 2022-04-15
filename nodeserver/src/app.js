@@ -12,7 +12,7 @@ mongoose.set('useUnifiedTopology', true) // TODO: vm@040720 - this is still givi
 mongoose.set('useNewUrlParser', true)
 mongoose.set('useCreateIndex', true)
 mongoose.set('useFindAndModify', false)
-mongoose.connect(mongo.uri)
+mongoose.connect('mongodb+srv://vedant:vedant@cluster0.8opjo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
 mongoose.Promise = Promise
 
 setImmediate(() => {
