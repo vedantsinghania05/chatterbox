@@ -11,9 +11,11 @@ import Scrollbar from 'react-smooth-scrollbar';
 class Home extends Component {
   constructor() {
     super();
-    this.state = {groupsInitUsers: '', groupList: [], selectedGroup: undefined, 
-    newMemberUsername: '', newMessage: '', groupsMessages: [], sameId: undefined, 
-    isCreator: true, confirm: false, redirect: false, pageNo: 1, messageCount: undefined, reset: false };
+    this.state = {
+      groupsInitUsers: '', groupList: [], selectedGroup: undefined,
+      newMemberUsername: '', newMessage: '', groupsMessages: [], sameId: undefined,
+      isCreator: true, confirm: false, redirect: false, pageNo: 1, messageCount: undefined, reset: false
+    };
   }
 
 
@@ -23,7 +25,7 @@ class Home extends Component {
       const { groupId } = this.props.location.state
       this.getGroup(groupId)
       this.getGroupMessages(groupId, 1)
-      this.setState({pageNo: 1})
+      this.setState({ pageNo: 1 })
     } else {
       this.getFirstGroupInfo()
     }
@@ -54,12 +56,12 @@ class Home extends Component {
     getFirstGroup(getUserToken(),
       response => {
         if (response.data) {
-          this.getGroupMessages(response.data.id) 
+          this.getGroupMessages(response.data.id)
 
           this.setState({ selectedGroup: response.data })
           if (response.data.creator !== this.props.userInfo.id) {
-            this.setState({isCreator: false})
-          } else this.setState({isCreator: true})
+            this.setState({ isCreator: false })
+          } else this.setState({ isCreator: true })
         } else {
           this.setState({ selectedGroup: 'none' })
         }
@@ -74,14 +76,14 @@ class Home extends Component {
       response => {
         this.setState({ selectedGroup: response.data })
         if (response.data.creator !== this.props.userInfo.id) {
-          this.setState({isCreator: false})
-        } else this.setState({isCreator: true})
+          this.setState({ isCreator: false })
+        } else this.setState({ isCreator: true })
       },
       error => {
       }
     )
 
-  } 
+  }
 
   onChangeNewMessage = (e) => {
     this.setState({ newMessage: e.target.value })
@@ -90,9 +92,9 @@ class Home extends Component {
   getGroupMessages = (groupId, newPageNo) => {
     const { pageNo, messageCount } = this.state;
     let skipCount;
-    countGroupsMessage(getUserToken(), groupId, 
+    countGroupsMessage(getUserToken(), groupId,
       response => {
-        this.setState({messageCount: response.data})
+        this.setState({ messageCount: response.data })
       },
       error => {
       }
@@ -104,16 +106,16 @@ class Home extends Component {
       skipCount = pageNo * 50
     }
     if (skipCount > messageCount && messageCount) {
-      this.setState({reset: true})
+      this.setState({ reset: true })
     }
 
-    getMessages(getUserToken(), groupId, skipCount-50,
+    getMessages(getUserToken(), groupId, skipCount - 50,
       response => {
-        
+
         let tempGroupsMessages = []
 
         for (let message of response.data) {
-          message.poster = this.getUserNickname(message.poster.email)    
+          message.poster = this.getUserNickname(message.poster.email)
           tempGroupsMessages.unshift(message)
         }
         this.setState({ groupsMessages: tempGroupsMessages, sameId: groupId })
@@ -126,7 +128,7 @@ class Home extends Component {
   pageNoChanger = (shouldIncrease) => {
     const { pageNo, sameId, reset } = this.state;
     let newPageNo = pageNo;
-    
+
     if (shouldIncrease) {
       newPageNo = pageNo + 1
     } else {
@@ -136,7 +138,7 @@ class Home extends Component {
     }
 
     if (reset) {
-      this.setState({reset: false})
+      this.setState({ reset: false })
     }
 
     this.getGroupMessages(sameId, newPageNo)
@@ -148,21 +150,21 @@ class Home extends Component {
     e.preventDefault()
     const { selectedGroup, newMessage } = this.state;
     if (newMessage && newMessage[0] !== ' ') {
-      this.setState({pageNo: 1, reset: false})
+      this.setState({ pageNo: 1, reset: false })
       createMessage(this.props.userInfo.id, selectedGroup.id, newMessage,
         response => {
           this.getGroupMessages(selectedGroup.id)
-          this.setState({ newMessage: '' })     
+          this.setState({ newMessage: '' })
         },
         error => {
         }
-      ) 
+      )
     }
   }
 
   getUserNickname = (username) => {
     let suffixIndex = username.indexOf('@')
-    let suffixLength = username.length-suffixIndex
+    let suffixLength = username.length - suffixIndex
     let posterCharacterList = username.split('')
 
     posterCharacterList.splice(suffixIndex, suffixLength)
@@ -180,39 +182,39 @@ class Home extends Component {
     const { userInfo } = this.props;
     const { selectedGroup } = this.state;
     if (selectedGroup.creator !== userInfo.id) {
-    updateMembersGroup(getUserToken(), selectedGroup.id, false, userInfo.email,
-      response => {
-        this.setState({redirect: true})
-        this.setState({redirect: false, confirm: false})
-        getUser(this.props.userInfo.id, getUserToken(),
-          response => {
-            this.props.setUserInfo(response.data)
-            this.setState({selectedGroup: undefined })
-          },
-          error => {
-          }
-        )
-      },
-      error => {
-      }
-    )
+      updateMembersGroup(getUserToken(), selectedGroup.id, false, userInfo.email,
+        response => {
+          this.setState({ redirect: true })
+          this.setState({ redirect: false, confirm: false })
+          getUser(this.props.userInfo.id, getUserToken(),
+            response => {
+              this.props.setUserInfo(response.data)
+              this.setState({ selectedGroup: undefined })
+            },
+            error => {
+            }
+          )
+        },
+        error => {
+        }
+      )
     }
   }
 
   confirmBool = () => {
-    const {confirm} = this.state
-    this.setState({confirm: !confirm})
+    const { confirm } = this.state
+    this.setState({ confirm: !confirm })
   }
 
   render() {
-    const {newMessage, groupsMessages, selectedGroup, confirm, redirect, reset, messageCount, pageNo} = this.state;
+    const { newMessage, groupsMessages, selectedGroup, confirm, redirect, reset, messageCount, pageNo } = this.state;
 
     return (
       <Container className="dashboard">
         <Row>
           <Col md={12}>
             <Card>
-              
+
               {selectedGroup === 'none' && <CardTitle>Click + to create your first group</CardTitle>}
 
               {selectedGroup !== 'none' && <CardBody>
@@ -222,14 +224,14 @@ class Home extends Component {
                   {!this.state.isCreator && !confirm && <Col ><Button color='primary' size='sm' onClick={this.confirmBool}>Leave Group</Button></Col>}
                   {!this.state.isCreator && confirm && <Col><ButtonGroup size='sm'>
                     <Button onClick={this.leaveGroup} color='danger'>{redirect && <Redirect to='/' />}Confirm</Button>
-                    <Button onClick={this.confirmBool} color='primary'>Cancel</Button> 
+                    <Button onClick={this.confirmBool} color='primary'>Cancel</Button>
                   </ButtonGroup></Col>}
-                  {selectedGroup && this.state.isCreator && <Col><Link to={{pathname:'/manage', state: {groupId: selectedGroup.id}}}><Button color='primary' size='sm'>Manage</Button></Link></Col>}
+                  {selectedGroup && this.state.isCreator && <Col><Link to={{ pathname: '/manage', state: { groupId: selectedGroup.id } }}><Button color='primary' size='sm'>Manage</Button></Link></Col>}
                 </Row>
 
                 {messageCount > 50 && <div>
-                  {reset ? <Button disabled size='sm' >{'<'}</Button> : <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(true)}>{'<'}</Button>}
-                  {pageNo === 1 ? <Button disabled size='sm' >{'>'}</Button> : <Button color='primary' size='sm' onClick={()=>this.pageNoChanger(false)}>{'>'}</Button>}
+                  {reset ? <Button disabled size='sm' >{'<'}</Button> : <Button color='primary' size='sm' onClick={() => this.pageNoChanger(true)}>{'<'}</Button>}
+                  {pageNo === 1 ? <Button disabled size='sm' >{'>'}</Button> : <Button color='primary' size='sm' onClick={() => this.pageNoChanger(false)}>{'>'}</Button>}
                 </div>}
 
                 <Scrollbar className='sidebar__scroll1'>
@@ -240,9 +242,9 @@ class Home extends Component {
                       </tr>
                       <tr>
                         <td className='content'>{message.content}</td>
-                      </tr>  
+                      </tr>
                     </tbody>)}
-                  </table> 
+                  </table>
                 </Scrollbar >
 
                 <Form onSubmit={this.postMsg}>
@@ -251,7 +253,7 @@ class Home extends Component {
                     placeholder="enter message"
                     value={newMessage}
                     onChange={this.onChangeNewMessage}
-                  />                    
+                  />
                 </Form>
 
               </CardBody>}

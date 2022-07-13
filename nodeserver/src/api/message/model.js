@@ -3,37 +3,37 @@ import { env } from '../../config'
 
 const messageSchema = new Schema({
 
-    poster: {
-        type: Schema.ObjectId,
-        ref: 'User',
-        index: true
-    },
-    group: {
-        type: Schema.ObjectId,
-        ref: 'Group',
-        index: true
-    },
-    content: {
-        type: String,
-        trim: true
-    }
+  poster: {
+    type: Schema.ObjectId,
+    ref: 'User',
+    index: true
+  },
+  group: {
+    type: Schema.ObjectId,
+    ref: 'Group',
+    index: true
+  },
+  content: {
+    type: String,
+    trim: true
+  }
 
 }, {
   timestamps: true
 })
 
 messageSchema.methods = {
-  view (full) {
+  view(full) {
     let view = {}
 
     view.poster = this.poster
     view.group = this.group
     view.content = this.content
- 
+
     if (full) {
       view.createdAt = this.createdAt;
       view.updatedAt = this.updatedAt;
-    }     
+    }
 
     return view;
   }
@@ -41,7 +41,7 @@ messageSchema.methods = {
 
 export const populateManyPosters = (messages) => {
   let promises = [];
-  messages.forEach(m => promises.push(new Promise(function(resolve, reject) {
+  messages.forEach(m => promises.push(new Promise(function (resolve, reject) {
     model.populate(m, [{ path: 'poster' }], function (err, popmessage) {
       if (!err && popmessage) {
         resolve(popmessage);
@@ -58,17 +58,17 @@ export const populateManyPosters = (messages) => {
       return undefined;
     })
   ))
-  .then((messages) => {
-    messages.forEach(message => {
-      if (message) popmanymessages.push(message);
-    })
+    .then((messages) => {
+      messages.forEach(message => {
+        if (message) popmanymessages.push(message);
+      })
 
-    return popmanymessages;
-  }) 
+      return popmanymessages;
+    })
 }
 
 export const populateMessagePoster = (message) => {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     model.populate(message, [{ path: 'poster' }], function (err, popmessage) {
       if (!err && popmessage) {
         resolve(popmessage);

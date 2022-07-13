@@ -33,10 +33,10 @@ const Sidebar = ({
   return (
     <div className={sidebarClass}>
       <button type="button" className="sidebar__back" onClick={changeMobileSidebarVisibility} />
-      <Scrollbar plugins={{disableScroll: { direction: 'x' }}} className="sidebar__scroll scroll">
+      <Scrollbar plugins={{ disableScroll: { direction: 'x' } }} className="sidebar__scroll scroll">
         <div className="sidebar__wrapper sidebar__wrapper--desktop">
           <SidebarContent
-            onClick={() => {}}
+            onClick={() => { }}
           />
         </div>
         <div className="sidebar__wrapper sidebar__wrapper--mobile">

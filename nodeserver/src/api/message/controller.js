@@ -8,7 +8,8 @@ export const create = ({ body }, res, next) => {
   return Message.create(fields)
     .then(message => {
       if (!message) return next(resInternal('Failed to create message'));
-      return populateMessagePoster(message)})
+      return populateMessagePoster(message)
+    })
     .then(message => {
       if (!message) return next(resInternal('Failed to populate message'))
       return resCreated(res, message.view(true))
@@ -44,13 +45,13 @@ export const deleteGroupsMessages = ({ params }, res, next) => {
     .catch(next)
 }
 
-export const countGroupsMessages =({ params }, res, next) => {
+export const countGroupsMessages = ({ params }, res, next) => {
   Message.countDocuments({ group: params.id })
     .then(messages => {
       if (!messages && messages != 0) return next(resInternal('Failed to count messages'))
       // return console.log(">>>>>>>", messages)
       return resOk(res, messages)
     })
-  .catch(next)
+    .catch(next)
 }
 

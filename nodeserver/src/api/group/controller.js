@@ -5,7 +5,7 @@ import { User } from '../user'
 export const create = ({ body }, res, next) => {
   let fields = { title: body.title, members: body.members, creator: body.creator };
 
-  User.find({ email: { $in: fields.members }})
+  User.find({ email: { $in: fields.members } })
     .then(users => {
       if (!users) return next(resInternal('Failed to find users'));
 
@@ -16,7 +16,7 @@ export const create = ({ body }, res, next) => {
     .then(group => {
       if (!group) return next(resInternal('Failed to create group'));
 
-      return resCreated(res, group.view(true) )
+      return resCreated(res, group.view(true))
     })
     .catch(next)
 }
@@ -131,15 +131,15 @@ export const destroy = ({ params }, res, next) => {
     .catch(next)
 }
 
-export const updateGroupCreator = ({params, body}, res, next) => {
+export const updateGroupCreator = ({ params, body }, res, next) => {
   Group.findById(params.id)
-  .then(group => {
-    if (!group) return next(resInternal('Failed to find group'));
-    if (body.creator) group.creator = body.creator
-    return group.save()
-  })
-  .then(group => {
-    if (!group) return next(resInternal('Failed to update group'));
-    return resOk(res, group.view(true));
-  })
+    .then(group => {
+      if (!group) return next(resInternal('Failed to find group'));
+      if (body.creator) group.creator = body.creator
+      return group.save()
+    })
+    .then(group => {
+      if (!group) return next(resInternal('Failed to update group'));
+      return resOk(res, group.view(true));
+    })
 }

@@ -17,7 +17,7 @@ router.get('/user',
 router.get('/first',
   token({ required: true }),
   getFirstGroupInfo)
-  
+
 router.get('/:id',
   token({ required: true }),
   getGroupInfo)

@@ -27,7 +27,7 @@ export const show = ({ params, user }, res, next) => {
       return resOk(res, response);
     })
     .catch(next)
-  }
+}
 
 export const create = ({ body }, res, next) => {
   let fields = { email: body.email, password: body.password, creator: body.creator };
@@ -78,7 +78,7 @@ export const updatePassword = ({ params, body, user }, res, next) =>
       if (!user) return next(resInternal('Failed to update user password'));
       return resOk(res, user.view(true));
     })
-    .catch(next)    
+    .catch(next)
 
 export const destroy = ({ params, user }, res, next) =>
   User.findById(params.id === 'me' ? user.id : params.id)

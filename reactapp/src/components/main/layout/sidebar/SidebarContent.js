@@ -38,7 +38,7 @@ class SidebarContent extends Component {
     e.preventDefault()
     const { groupsInitUsers, groupList } = this.state;
     let emailsToAdd = this.parseForUserEmails(groupsInitUsers)
-    
+
     let emailIndex = 0
     for (let email of emailsToAdd) {
       if (email === this.props.userInfo.email) {
@@ -104,50 +104,50 @@ class SidebarContent extends Component {
     const { onClick } = this.props;
     onClick();
   };
-  toggleModal =() => {
-    const {toggle} = this.state
-    this.setState({toggle: !toggle})
+  toggleModal = () => {
+    const { toggle } = this.state
+    this.setState({ toggle: !toggle })
   }
   render() {
     const { groupList, groupsInitUsers, toggle } = this.state;
     return (
       <span>
-        <br/>
+        <br />
         <Row>
           <Col md={6}>
             <ul><SidebarTitle title="Groups" /></ul>
           </Col>
           <Col md="auto">
-          <Button size='sm' onClick={this.toggleModal} color='primary'>+</Button>
+            <Button size='sm' onClick={this.toggleModal} color='primary'>+</Button>
           </Col>
         </Row>
-          <Modal isOpen={toggle}>
-            <ModalHeader toggle={this.toggleModal}>Create Group</ModalHeader>
-            <ModalBody>
-              <Form onSubmit={this.createNewGroup}>
-                <Input bsSize="sm"
+        <Modal isOpen={toggle}>
+          <ModalHeader toggle={this.toggleModal}>Create Group</ModalHeader>
+          <ModalBody>
+            <Form onSubmit={this.createNewGroup}>
+              <Input bsSize="sm"
                 name='groupsInitUsers'
                 placeholder='enter user(s) - hit enter to create'
                 value={groupsInitUsers}
                 onChange={this.onChangeGroupsInitUsers}
-                />
-              </Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button size="sm" color="primary" onClick={this.createNewGroup}>Submit</Button>   
-              <Button size="sm" color="primary" onClick={this.toggleModal}>Cancel</Button>
-            </ModalFooter>
-          </Modal>
-          {/*<ul className=“sidebar__block”>
+              />
+            </Form>
+          </ModalBody>
+          <ModalFooter>
+            <Button size="sm" color="primary" onClick={this.createNewGroup}>Submit</Button>
+            <Button size="sm" color="primary" onClick={this.toggleModal}>Cancel</Button>
+          </ModalFooter>
+        </Modal>
+        {/*<ul className=“sidebar__block”>
             <SidebarLink title=“Log Out” icon=“exit” route=“/signin” onClick={this.hideSidebar} />
           </ul>*/}
-          {groupList.map((group, index) =>
-            <ul key={index}>
-              <SidebarLink key={index} title={group.title} to={{pathname:"/", state: {groupId: group._id}, backtoGroup: false}} onClick={this.hideSidebar} />
-            </ul>
-          )}
+        {groupList.map((group, index) =>
+          <ul key={index}>
+            <SidebarLink key={index} title={group.title} to={{ pathname: "/", state: { groupId: group._id }, backtoGroup: false }} onClick={this.hideSidebar} />
+          </ul>
+        )}
       </span>
     );
   }
 }
-export default connect(signedInUserMstp, signedInUserMdtp) (SidebarContent);
+export default connect(signedInUserMstp, signedInUserMdtp)(SidebarContent);

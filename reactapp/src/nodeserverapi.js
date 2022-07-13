@@ -10,13 +10,15 @@ const nodeserverUrl = 'http://localhost:9000';
 export const signInUser = (username, password, successCbk, errorCbk) => {
   axiosInstance.post(nodeserverUrl + '/auth',
     { access_token: masterKey },
-    { auth: {
-      username: username,
-      password: password
-    }}
+    {
+      auth: {
+        username: username,
+        password: password
+      }
+    }
   )
-  .then(successCbk)
-  .catch(errorCbk);
+    .then(successCbk)
+    .catch(errorCbk);
 }
 
 
@@ -31,32 +33,32 @@ export const createUser = (username, password, successCbk, errorCbk) => {
       password: password,
     },
   )
-  .then(successCbk)
-  .catch(errorCbk);
+    .then(successCbk)
+    .catch(errorCbk);
 }
 
 export const getAllUser = (token, successCbk, errorCbk) => {
   axiosInstance.get(nodeserverUrl + '/users/',
     { headers: { Authorization: 'Bearer ' + token } }
   )
-  .then(successCbk)
-  .catch(errorCbk)
+    .then(successCbk)
+    .catch(errorCbk)
 }
 
 export const getMember = (token, groupId, successCbk, errorCbk) => {
   axiosInstance.get(nodeserverUrl + '/groups/' + groupId + '/members',
     { headers: { Authorization: 'Bearer ' + token } }
   )
-  .then(successCbk)
-  .catch(errorCbk)
+    .then(successCbk)
+    .catch(errorCbk)
 }
 
 export const getUser = (id, token, successCbk, errorCbk) => {
   axiosInstance.get(nodeserverUrl + '/users/' + id,
     { headers: { Authorization: 'Bearer ' + token } }
   )
-  .then(successCbk)
-  .catch(errorCbk);
+    .then(successCbk)
+    .catch(errorCbk);
 }
 
 export const updateUser = (id, token, email, successCbk, errorCbk) => {
@@ -66,8 +68,8 @@ export const updateUser = (id, token, email, successCbk, errorCbk) => {
       access_token: token
     }
   )
-  .then(successCbk)
-  .catch(errorCbk);
+    .then(successCbk)
+    .catch(errorCbk);
 }
 
 export const getValidUsers = (token, emailsList, successCbk, errorCbk) => {
@@ -77,16 +79,16 @@ export const getValidUsers = (token, emailsList, successCbk, errorCbk) => {
       emails: emailsList
     }
   )
-  .then(successCbk)
-  .catch(errorCbk)
+    .then(successCbk)
+    .catch(errorCbk)
 }
 
-export const deleteUser  = (id, token, successCbk, errorCbk) => {
+export const deleteUser = (id, token, successCbk, errorCbk) => {
   axiosInstance.delete(nodeserverUrl + '/users/' + id,
     { headers: { Authorization: 'Bearer ' + token } }
   )
-  .then(successCbk)
-  .catch(errorCbk);
+    .then(successCbk)
+    .catch(errorCbk);
 }
 
 /**
@@ -101,32 +103,32 @@ export const createGroup = (title, members, creator, successCbk, errorCbk) => {
       creator: creator
     },
   )
-  .then(successCbk)
-  .catch(errorCbk)
+    .then(successCbk)
+    .catch(errorCbk)
 }
 
 export const getGroupsForUser = (token, successCbk, errorCbk) => {
   axiosInstance.get(nodeserverUrl + '/groups/user',
     { headers: { Authorization: 'Bearer ' + token } }
   )
-  .then(successCbk)
-  .catch(errorCbk)
+    .then(successCbk)
+    .catch(errorCbk)
 }
 
 export const getGroupInfo = (token, groupId, successCbk, errorCbk) => {
   axiosInstance.get(nodeserverUrl + '/groups/' + groupId,
     { headers: { Authorization: 'Bearer ' + token } }
   )
-  .then(successCbk)
-  .catch(errorCbk)
+    .then(successCbk)
+    .catch(errorCbk)
 }
 
 export const getFirstGroup = (token, successCbk, errorCbk) => {
   axiosInstance.get(nodeserverUrl + '/groups/first',
     { headers: { Authorization: 'Bearer ' + token } }
   )
-  .then(successCbk)
-  .catch(errorCbk)
+    .then(successCbk)
+    .catch(errorCbk)
 }
 
 export const updateTitleGroup = (token, groupId, title, successCbk, errorCbk) => {
@@ -136,8 +138,8 @@ export const updateTitleGroup = (token, groupId, title, successCbk, errorCbk) =>
       title: title,
     }
   )
-  .then(successCbk)
-  .catch(errorCbk)
+    .then(successCbk)
+    .catch(errorCbk)
 }
 
 export const updateMembersGroup = (token, groupId, shouldAdd, userEmail, successCbk, errorCbk) => {
@@ -148,16 +150,16 @@ export const updateMembersGroup = (token, groupId, shouldAdd, userEmail, success
       userEmail: userEmail
     }
   )
-  .then(successCbk)
-  .catch(errorCbk)
+    .then(successCbk)
+    .catch(errorCbk)
 }
 
 export const deleteGroup = (token, groupId, successCbk, errorCbk) => {
   axiosInstance.delete(nodeserverUrl + '/groups/' + groupId,
     { headers: { Authorization: 'Bearer ' + token } }
   )
-  .then(successCbk)
-  .catch(errorCbk);
+    .then(successCbk)
+    .catch(errorCbk);
 }
 
 export const updateCreatorGroup = (token, groupId, creator, successCbk, errorCbk) => {
@@ -167,8 +169,8 @@ export const updateCreatorGroup = (token, groupId, creator, successCbk, errorCbk
       creator: creator
     }
   )
-  .then(successCbk)
-  .catch(errorCbk);
+    .then(successCbk)
+    .catch(errorCbk);
 }
 /**
  * Message
@@ -182,30 +184,30 @@ export const createMessage = (poster, group, content, successCbk, errorCbk) => {
       content: content
     }
   )
-  .then(successCbk)
-  .catch(errorCbk)
+    .then(successCbk)
+    .catch(errorCbk)
 }
 
 export const getMessages = (token, group, skipCount, successCbk, errorCbk) => {
   axiosInstance.get(nodeserverUrl + '/messages?group=' + group + '&skipCount=' + skipCount,
     { headers: { Authorization: 'Bearer ' + token } }
   )
-  .then(successCbk)
-  .catch(errorCbk)
+    .then(successCbk)
+    .catch(errorCbk)
 }
 
 export const deleteGroupsMessage = (token, groupId, successCbk, errorCbk) => {
   axiosInstance.delete(nodeserverUrl + '/messages/' + groupId,
     { headers: { Authorization: 'Bearer ' + token } }
   )
-  .then(successCbk)
-  .catch(errorCbk)
+    .then(successCbk)
+    .catch(errorCbk)
 }
 
 export const countGroupsMessage = (token, groupId, successCbk, errorCbk) => {
   axiosInstance.get(nodeserverUrl + '/messages/' + groupId + '/count',
     { headers: { Authorization: 'Bearer ' + token } }
   )
-  .then(successCbk)
-  .catch(errorCbk);
-   }
+    .then(successCbk)
+    .catch(errorCbk);
+}
